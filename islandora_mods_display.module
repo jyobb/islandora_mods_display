@@ -1,0 +1,103 @@
+<?php
+/**
+ * @file
+ * Example module to demonstrate Islandora metadata display viewer framework.
+ */
+
+/**
+ * Implements hook_theme().
+ * see the islandora module for these functions
+ */
+function islandora_mods_display_theme() {
+  return array(
+    'islandora_mods_display_display' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/islandora-mods-display-display-template',
+      // We can add PIDs to the end of this pattern in our preprocess function
+      // and templates will be able to have have a pid appended to the
+      // template name to overide a template on a per object basis.
+      // An example template might be named:
+      // "unicorns-are-awesome-display-template--islandora-27.tpl.php".
+      'pattern' => 'islandora_mods_display_display_template__',
+      'variables' => array(
+        'islandora_object' => NULL,
+        'print' => NULL,
+      ),
+    ),
+    'islandora_mods_display_description' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/islandora-mods-display-description-template',
+      // We can add PIDs to the end of this pattern in our preprocess function
+      // and templates will be able to have have a pid appended to the
+      // template name to overide a template on a per object basis.
+      // An example template might be named:
+      // "unicorns-are-awesome-description-template--islandora-27.tpl.php".
+      'pattern' => 'islandora_mods_display_description_template__',
+      'variables' => array('islandora_object' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implements hook_islandora_metadata_display_info().
+ * This defines how the view shows up in the metadata display selector
+ * and the callback. an example can be found in islandora/includes/metadata.inc
+ *
+ */
+function islandora_mods_display_islandora_metadata_display_info() {
+  return array(
+    'islandora' => array(
+      'label' => t('Islandora MODS'),
+      'description' => t('Use MODS for metadata'),
+      'metadata callback' => 'islandora_mods_display_display_callback',
+      'description callback' => 'islandora_mods_display_description_callback',
+    ),
+  );
+}
+
+/**
+ * Metadata display callback for rendering metadata from MODS.
+ *
+ * @param AbstractObject $object
+ *   An AbstractObject representing an object within Fedora.
+ * @param bool $print
+ *   Whether this is for printing purposes.
+ *
+ * @return string
+ *   Markup representing the metadata display pulled from MODS.
+ */
+function islandora_mods_display_display_callback(AbstractObject $object, $print = FALSE) {
+  // For example purposes of the object is not a basic image let's theme it
+  // instead.
+  // You can look at the content model here and change the template that is used.
+  // This also determines the preprocessing functions that are used in the 
+  // theme.inc file
+  // in_array('islandora:sp_basic_image', $object->models)
+
+    $elements = array(
+      'islandora_object' => $object,
+      'print' => $print,
+    );
+    return theme('islandora_mods_display_display', $elements);
+
+}
+
+/**
+ * Metadata display callback for rendering metadata from MODS.
+ *
+ * @param AbstractObject $object
+ *   An AbstractObject representing an object within Fedora.
+ *
+ * @return string
+ *   Markup representing the metadata display pulled from MODS.
+ */
+function islandora_mods_display_description_callback(AbstractObject $object) {
+  // For example purposes of the object is not a basic image let's theme it
+  // instead.
+
+    $elements = array(
+      'islandora_object' => $object,
+    );
+    return theme('islandora_mods_display_description', $elements);
+
+}
