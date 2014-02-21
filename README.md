@@ -1,4 +1,5 @@
-Unicorns Are Awesome Module
+Islandora_mods_display
+
 ===========================
 
 SUMMARY
