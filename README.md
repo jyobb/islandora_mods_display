@@ -6,8 +6,7 @@ SUMMARY
 -------
 Provides an example implementation of the Islandora metadata display viewer framework.
 
-On basic image objects a sparkly unicorn is displayed, on all others the Islandora 6
-object details XSLT is utilized to transform MODS data to HTML output.
+XSLT is utilized to transform MODS data to HTML output.
 
 REQUIREMENTS
 ------------
