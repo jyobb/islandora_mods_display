@@ -50,7 +50,8 @@ function islandora_mods_display_preprocess_islandora_mods_display_display(array 
 		  'identifier' => 'Identifier',
 		  'physicalLocation' => 'Physical Location',
 		  'shelfLocation' => 'Shelf Location',
-		  'url' => 'URL',
+                  'recommendedCitation' => 'Recommended Citation',
+		 // 'url' => 'URL',
 		  'holdingSubLocation' => 'Holding Sublocation',
 		  'holdingShelfLocator' => 'Holding Shelf Locator',
 		  'electronicLocator' => 'Electronic Locator',
@@ -72,7 +73,6 @@ function islandora_mods_display_preprocess_islandora_mods_display_display(array 
       //drupal_set_message($k);
       $xslt->setParameter('',$k,$v);
       }
-
       $variables['metadata'] = $xslt->transformToXml($input);
       }
   }

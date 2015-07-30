@@ -70,7 +70,8 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	  <xsl:param name="identifier" />
 	  <xsl:param name="physicalLocation" />
 	  <xsl:param name="shelfLocation" />
-	  <xsl:param name="url" />
+	<!--  <xsl:param name="url" /> -->
+	  <xsl:param name="recommendedCitation" />
 	  <xsl:param name="holdingSubLocation" />
 	  <xsl:param name="holdingShelfLocator" />
 	  <xsl:param name="electronicLocator" />
@@ -457,9 +458,16 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	      </xsl:for-each>
 	  </td></tr>
 	  </xsl:if>
-	  <xsl:if test="normalize-space(mods:url)">
+	<!--  <xsl:if test="normalize-space(mods:url)">
 	    <tr><td><xsl:value-of select="$url"/></td><td>
 		<xsl:for-each select="mods:url">
+		  <xsl:value-of select="."/>
+		</xsl:for-each>
+	    </td></tr>
+	  </xsl:if>  -->
+	  <xsl:if test="normalize-space(mods:recommendedCitation)">
+	    <tr><td><xsl:value-of select="$recommendedCitation"/></td><td>
+		<xsl:for-each select="mods:recommendedCitation">
 		  <xsl:value-of select="."/>
 		</xsl:for-each>
 	    </td></tr>
@@ -513,7 +521,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			<xsl:when test="@type='original'">
 			  <tr><td><xsl:value-of select="$relatedItem"/></td><td>
 					<xsl:for-each
-						select="mods:titleInfo/mods:title | mods:identifier | mods:location/mods:url">
+						select="mods:titleInfo/mods:title | mods:identifier | mods:location/mods:recommendedCitation">
 						<xsl:if test="normalize-space(.)!= ''">
 							<xsl:value-of select="."/>
 							<xsl:if test="position()!=last()">--</xsl:if>
@@ -525,7 +533,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			<xsl:otherwise>
 			  <tr><td><xsl:value-of select="$relatedItem"/></td><td>
 					<xsl:for-each
-						select="mods:titleInfo/mods:title | mods:identifier | mods:location/mods:url">
+						select="mods:titleInfo/mods:title | mods:identifier | mods:location/mods:recommendedCitation">
 						<xsl:if test="normalize-space(.)!= ''">
 							<xsl:value-of select="."/>
 							<xsl:if test="position()!=last()">--</xsl:if>
