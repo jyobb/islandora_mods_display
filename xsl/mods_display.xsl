@@ -169,29 +169,17 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	      </td></tr>  
 	    </xsl:for-each>
 	  </xsl:if>			
-	  <!--mike's solution
-		<xsl:template match="subject">    
-		    <xsl:for-each select="tokenize(.,';')">
-		        <xsl:element name="subject">
-		            <xsl:for-each select="tokenize(.,'--')">
-		                <xsl:element name="topic">
-		                    <xsl:attribute name="authority">lcsh</xsl:attribute>
-		                    <xsl:value-of select="replace(., '^\s+|\s+$', '')"/>
-		                </xsl:element>
-		            </xsl:for-each>
-		        </xsl:element>
-		    </xsl:for-each>
-		</xsl:template>
-		end mike's solution-->
-
+	  
 
 	  <xsl:if test="normalize-space(mods:occupation)">
 	    <xsl:for-each select="mods:occupation">
-	      <tr><td><xsl:value-of select="$subjectOccupation"/></td><td>
-		  <xsl:value-of select="."/>
-		  <xsl:if test="position()!=last()">--</xsl:if>
-	      </td></tr>
-	    </xsl:for-each>		
+	      <tr>
+	      	<td>
+	        <xsl:value-of select="$subjectOccupation"/>
+	      	<xsl:value-of select="."/>
+	        </xsl:for-each>
+         </td>
+	     </tr>
 	  </xsl:if>
 
 	  <xsl:if test="normalize-space(mods:name)">
