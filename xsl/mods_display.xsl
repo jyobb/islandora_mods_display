@@ -187,11 +187,13 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 
 	  <xsl:if test="normalize-space(mods:occupation)">
 	    <xsl:for-each select="mods:occupation">
-	      <tr><td><xsl:value-of select="$subjectOccupation"/></td><td>
-		  <xsl:value-of select="."/>
-		  <xsl:if test="position()!=last()">--</xsl:if>
-	      </td></tr>
-	    </xsl:for-each>		
+	      <tr>
+	      	<td>
+	        <xsl:value-of select="$subjectOccupation"/>
+	      	<xsl:value-of select="."/>
+	        </xsl:for-each>
+         </td>
+	     </tr>
 	  </xsl:if>
 
 	  <xsl:if test="normalize-space(mods:name)">
