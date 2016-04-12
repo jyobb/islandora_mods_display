@@ -170,6 +170,20 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	    </xsl:for-each>
 	  </xsl:if>			
 
+		<xsl:template match="subjects">    
+		    <xsl:for-each select="tokenize(.,';')">
+		        <xsl:element name="subject">
+		            <xsl:for-each select="tokenize(.,'--')">
+		                <xsl:element name="topic">
+		                    <xsl:attribute name="authority">lcsh</xsl:attribute>
+		                    <xsl:value-of select="replace(., '^\s+|\s+$', '')"/>
+		                </xsl:element>
+		            </xsl:for-each>
+		        </xsl:element>
+		    </xsl:for-each>
+		</xsl:template>
+
+
 	  <xsl:if test="normalize-space(mods:occupation)">
 	    <xsl:for-each select="mods:occupation">
 	      <tr><td><xsl:value-of select="$subjectOccupation"/></td><td>
