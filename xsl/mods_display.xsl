@@ -173,7 +173,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		<xsl:template match="subject">    
 		    <xsl:for-each select="tokenize(.,';')">
 		        <xsl:element name="subject">
-		            <xsl:for-each select="tokenize(.,'--')">
+		            <xsl:for-each select="tokenize(.,'')">
 		                <xsl:element name="topic">
 		                    <xsl:attribute name="authority">lcsh</xsl:attribute>
 		                    <xsl:value-of select="replace(., '^\s+|\s+$', '')"/>
