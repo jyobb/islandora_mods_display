@@ -169,8 +169,8 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	      </td></tr>  
 	    </xsl:for-each>
 	  </xsl:if>			
-
-		<xsl:template match="subjects">    
+	  <!--mike's solution-->
+		<xsl:template match="subject">    
 		    <xsl:for-each select="tokenize(.,';')">
 		        <xsl:element name="subject">
 		            <xsl:for-each select="tokenize(.,'--')">
@@ -182,6 +182,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		        </xsl:element>
 		    </xsl:for-each>
 		</xsl:template>
+		<!--end mike's solution-->
 
 
 	  <xsl:if test="normalize-space(mods:occupation)">
