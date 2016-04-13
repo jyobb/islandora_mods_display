@@ -174,8 +174,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				<xsl:value-of select="'%2522'"/>
                     	</xsl:attribute>
 			<xsl:value-of select="."/>
-                    </a>
-                    <!--<a href="/islandora/search/" class="active"><xsl:value-of select="."/></a><br></br>-->
+                    </a><br></br>
                     <!--<xsl:if test="position()!=last()">dashdash</xsl:if>-->
                  </xsl:for-each>
 	      </td>  
