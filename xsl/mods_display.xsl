@@ -166,7 +166,12 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	    <tr>
 	      <td><xsl:value-of select="$subjectTopic"/></td><td>
                    <xsl:for-each select="mods:topic">
-                    <a href="/islandora/search/"+ select="mods:topic" class="active"><xsl:value-of select="."/></a><br></br>
+                    <a>
+                    	<xsl:attribute name="href">
+                    		<xsl:value-of select="concat('/islandora/search/', /@value)"/>
+                    	</xsl:attribute>
+                    </a>
+                    <!--<a href="/islandora/search/" class="active"><xsl:value-of select="."/></a><br></br>-->
                     <!--<xsl:if test="position()!=last()">dashdash</xsl:if>-->
                  </xsl:for-each>
 	      </td>  
