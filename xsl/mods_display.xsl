@@ -164,9 +164,10 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	  <xsl:if test="normalize-space(mods:topic)">
 	    <tr>
 	      <td><xsl:value-of select="$subjectTopic"/></td><td>
-                  <xsl:value-of select="."/><br/>
+                 <xsl:for-each select="mods:topic">
+		  <xsl:value-of select="."/><br></br>
 		  <!--<xsl:if test="position()!=last()">dashdash</xsl:if>-->
-                  </xsl:for-each>
+                 </xsl:for-each>
 	      </td>  
 	    </tr>
 	  </xsl:if>			
