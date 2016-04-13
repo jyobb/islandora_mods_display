@@ -163,7 +163,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 <!-- 	<xsl:template match="mods:subject[mods:topic | mods:name | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] "> -->
 	  <xsl:if test="normalize-space(mods:topic)">
 	    <tr>
-	      <td><xsl:value-of select="$subjectTopic"/>
+	      <td><xsl:value-of select="$subjectTopic"/></td><td>
                   <xsl:value-of select="."/><br>
 		  <!--<xsl:if test="position()!=last()">dashdash</xsl:if>-->
                   </xsl:for-each>
