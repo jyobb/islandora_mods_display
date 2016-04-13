@@ -167,9 +167,13 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	      <td><xsl:value-of select="$subjectTopic"/></td><td>
                    <xsl:for-each select="mods:topic">
                     <a>
+			
                     	<xsl:attribute name="href">
-                    		<xsl:value-of select="concat('/islandora/search/', /@value)"/>
+                    		<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A%2522'"/>
+				<xsl:value-of select="."/>
+				<xsl:value-of select="'%2522'"/>
                     	</xsl:attribute>
+			<xsl:value-of select="."/>
                     </a>
                     <!--<a href="/islandora/search/" class="active"><xsl:value-of select="."/></a><br></br>-->
                     <!--<xsl:if test="position()!=last()">dashdash</xsl:if>-->
