@@ -159,13 +159,14 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		</tr>
 	</xsl:template>
 
+
 	<xsl:template match="mods:subject[mods:topic | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] ">
 <!-- 	<xsl:template match="mods:subject[mods:topic | mods:name | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] "> -->
 	  <xsl:if test="normalize-space(mods:topic)">
 	    <tr>
 	      <td><xsl:value-of select="$subjectTopic"/></td><td>
 		  <xsl:for-each select="mods:topic">
-                  <xsl:value-of select="."/><br>
+                  <a href="/islandora/search" class="active"><xsl:value-of select="."/></a><br></br>
 		  <!--<xsl:if test="position()!=last()">dashdash</xsl:if>-->
                   </xsl:for-each>
 	      </td>  
