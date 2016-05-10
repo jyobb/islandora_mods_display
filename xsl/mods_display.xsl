@@ -77,6 +77,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	  <xsl:param name="electronicLocator" />
 	  <xsl:param name="language" />
 	  <xsl:param name="relatedItem" />
+	  <!-- related item replaced with display Label for mods:relatedItem/titleInfo/@displayLabel /-->  
 	  <xsl:param name="accessCondition" />
 
 		<xsl:choose>
@@ -175,7 +176,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
                     	</xsl:attribute>
 			<xsl:value-of select="."/>
                     </a><br></br>
-                    <!--<xsl:if test="position()!=last()">dashdash</xsl:if>-->
+                    <xsl:if test="position()!=last()">--</xsl:if>
                  </xsl:for-each>
 	      </td>  
 	    </tr>
@@ -525,12 +526,19 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</td></tr>
 </xsl:if>
 	</xsl:template>
-
+<!-- <start will's own loop>-->
+	<xsl:template match="mods:identifier">
+		
+			<tr><td><xsl:value-of select="@displayLabel"/></td><td>
+				<xsl:value-of select="."/>
+			</td></tr>
+	
+	</xsl:template>
 	<xsl:template match="mods:relatedItem[mods:titleInfo | mods:identifier | mods:location]">
 <!--	<xsl:template match="mods:relatedItem[mods:titleInfo | mods:name | mods:identifier | mods:location]"> -->
 		<xsl:choose>
 			<xsl:when test="@type='original'">
-			  <tr><td><xsl:value-of select="$relatedItem"/></td><td>
+			  <tr><td><xsl:value-of select="mods:titleInfo/@displayLabel | identifier/@displayLabel  | mods:location/mods:url/@displayLabel"/></td><td>
 					<xsl:for-each
 						select="mods:titleInfo/mods:title | mods:identifier | mods:location/mods:recommendedCitation">
 						<xsl:if test="normalize-space(.)!= ''">
@@ -542,7 +550,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</xsl:when>
 			<xsl:when test="@type='series'"/>
 			<xsl:otherwise>
-			  <tr><td><xsl:value-of select="$relatedItem"/></td><td>
+			  <tr><td><xsl:value-of select="mods:titleInfo/@displayLabel | mods:identifier/@displayLabel  | mods:location/mods:url/@displayLabel"/></td><td>
 					<xsl:for-each
 						select="mods:titleInfo/mods:title | mods:identifier | mods:location/mods:recommendedCitation">
 						<xsl:if test="normalize-space(.)!= ''">
