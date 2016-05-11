@@ -77,7 +77,6 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	  <xsl:param name="electronicLocator" />
 	  <xsl:param name="language" />
 	  <xsl:param name="relatedItem" />
-	  <!-- related item replaced with display Label for mods:relatedItem/titleInfo/@displayLabel /-->  
 	  <xsl:param name="accessCondition" />
 
 		<xsl:choose>
@@ -106,7 +105,12 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	
 	<xsl:template match="mods:titleInfo">
 		<!-- <dc:title> -->
-		<tr><td><xsl:value-of select="$title"/></td><td>
+		<tr><td>
+			<xsl:choose><xsl:when test="not(@displayLabel)">
+				<xsl:value-of select="$title"/>
+			</xsl:when></xsl:choose>
+			<xsl:value-of select="@displayLabel"/>
+		</td><td>
 			<xsl:value-of select="mods:nonSort"/>
 			<xsl:if test="mods:nonSort">
 				<xsl:text> </xsl:text>
@@ -128,11 +132,12 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
  	<!-- </dc:title> -->
 	</xsl:template>
 
-
 	<xsl:template match="mods:name">
 		<tr>
-		  <td>
-		    <xsl:value-of select="$name"/>
+		  <td><xsl:choose><xsl:when test="not(@displayLabel)">
+                                <xsl:value-of select="$name"/>
+                        </xsl:when></xsl:choose>
+		     <xsl:value-of select="@displayLabel"/>
 		  </td><td>
 
 		<xsl:choose>
@@ -165,19 +170,27 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 <!-- 	<xsl:template match="mods:subject[mods:topic | mods:name | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] "> -->
 	  <xsl:if test="normalize-space(mods:topic)">
 	    <tr>
-	      <td><xsl:value-of select="$subjectTopic"/></td><td>
-                   <xsl:for-each select="mods:topic">
-                    <a>
-			
+	      <td><xsl:choose><xsl:when test="not(@displayLabel)">
+                                <xsl:value-of select="$subjectTopic"/>
+                        </xsl:when></xsl:choose><xsl:value-of select="@displayLabel"/></td><td>
+	<!--try new one here for together subject terms
+	<xsl:for-each select="mods:topic">
+		
+		<xsl:value-of select="."/>
+		
+	</xsl:for-each>
+	-->
+		
+		<xsl:for-each select="mods:topic">
+		<a>
                     	<xsl:attribute name="href">
                     		<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A%2522'"/>
 				<xsl:value-of select="."/>
 				<xsl:value-of select="'%2522'"/>
                     	</xsl:attribute>
-			<xsl:value-of select="."/>
-                    </a><br></br>
-                    <xsl:if test="position()!=last()">--</xsl:if>
-                 </xsl:for-each>
+				<xsl:value-of select="."/>
+		</a>
+		</xsl:for-each>
 	      </td>  
 	    </tr>
 	  </xsl:if>			
@@ -247,7 +260,9 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	<xsl:template match="mods:abstract">
 	  <!-- <xsl:if test="mods:abstract =''"> -->
 	  <xsl:if test="normalize-space()">
-		  <tr><td><xsl:value-of select="$abstract"/></td><td>			
+		  <tr><td><xsl:choose><xsl:when test="not(@displayLabel)">
+                                <xsl:value-of select="$abstract"/>
+                        </xsl:when></xsl:choose><xsl:value-of select="@displayLabel"/> </td><td>			
 			<xsl:value-of select="."/>
 		  </td></tr>
 	  </xsl:if>
@@ -264,7 +279,9 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 
 	<xsl:template match="mods:note">
 	  <xsl:if test="normalize-space(.)">	
-	  <tr><td><xsl:value-of select="$note"/></td><td>			
+	  <tr><td><xsl:choose><xsl:when test="not(@displayLabel)">
+                                <xsl:value-of select="$note"/>
+                        </xsl:when></xsl:choose><xsl:value-of select="@displayLabel"/></td><td>			
 			<xsl:value-of select="."/>
 		  </td></tr>
 </xsl:if>
