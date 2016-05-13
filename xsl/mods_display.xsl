@@ -133,51 +133,43 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</xsl:template>
 
 	<xsl:template match="mods:name">
-		<tr>
-		  <td><xsl:choose><xsl:when test="not(@displayLabel)">
+		<tr><td><xsl:choose><xsl:when test="not(@displayLabel)">
                                 <xsl:value-of select="$name"/>
                         </xsl:when></xsl:choose>
 		     <xsl:value-of select="@displayLabel"/>
-		  </td><td>
-
+		</td><td>
 		<xsl:choose>
-			<xsl:when
-				test="mods:role/mods:roleTerm[@type='text']='creator' or mods:role/mods:roleTerm[@type='code']='cre' ">
+			<xsl:when test="mods:role/mods:roleTerm[@type='text']='creator' or mods:role/mods:roleTerm[@type='code']='cre' ">
 					<xsl:call-template name="name"/>
 			</xsl:when>
-
 			<xsl:otherwise>
 					<xsl:call-template name="name"/>
 			</xsl:otherwise>
 		</xsl:choose>
-		  </td>
-		</tr>
+		</td></tr>
 	</xsl:template>
 
 	<xsl:template match="mods:classification">
-		<tr>
-		  <td>
+		<tr><td>
 		    <xsl:value-of select="$classification"/>
-		  </td>
-		  <td>
+		</td><td>
 			<xsl:value-of select="."/>
-		</td>
-		</tr>
+		</td></tr>
 	</xsl:template>
 
 
 	<xsl:template match="mods:subject[mods:topic | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] ">
 <!-- 	<xsl:template match="mods:subject[mods:topic | mods:name | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] "> -->
 	  <xsl:if test="normalize-space(mods:topic)">
-	    <tr>
-	      <td><xsl:choose><xsl:when test="not(@displayLabel)">
+	    <tr><td>
+		<xsl:choose><xsl:when test="not(@displayLabel)">
                                 <xsl:value-of select="$subjectTopic"/>
-                        </xsl:when></xsl:choose><xsl:value-of select="@displayLabel"/></td><td>
+                </xsl:when></xsl:choose>
+		<xsl:value-of select="@displayLabel"/>
+	    </td><td>
 	<!--try new one here for together subject terms
-	<xsl:for-each select="mods:topic">
-		
+	<xsl:for-each select="mods:topic">	
 		<xsl:value-of select="."/>
-		
 	</xsl:for-each>
 	-->
 		
@@ -191,8 +183,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				<xsl:value-of select="."/>
 		</a>
 		</xsl:for-each>
-	      </td>  
-	    </tr>
+	      </td>  </tr>
 	  </xsl:if>			
 
 	  <xsl:if test="normalize-space(mods:occupation)">
@@ -287,37 +278,42 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 </xsl:if>
 	</xsl:template>
 
+	<!-- date stuff -->
+<!--
+<xsl:template match="mods:originInfo">
+	<tr><td>aoeuaoeuaoeu</td><td><xsl:value-of select="."/></td></tr>
 
+</xsl:template>
+-->	
+	<xsl:template match="mods:originInfo">
+		<xsl:if test="mods:dateIssued"><tr><td><xsl:copy-of select="name(mods:dateIssued)"/></td><td><xsl:value-of select="."/></td></tr></xsl:if>
+		<xsl:if test="mods:dateCreated"><tr><td><xsl:copy-of select="name(mods:dateCreated)"/></td><td><xsl:value-of select="."/></td></tr></xsl:if>
+		<xsl:if test="mods:dateCaptured"><tr><td><xsl:copy-of select="name(mods:dateCaptured)"/></td><td><xsl:value-of select="."/></td></tr></xsl:if>
+		<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr>
+	</xsl:template>
+<!--	
 	<xsl:template match="mods:originInfo">
 		<xsl:apply-templates select="*[@point='start']"/>
-
 		<xsl:for-each select="mods:dateIssued[@point!='start' and @point!='end']">
 		  <tr><td><xsl:value-of select="$dateIssued"/></td><td>			
 				<xsl:value-of select="."/>
 				</td></tr>
 		</xsl:for-each>
-
-
 		<xsl:for-each select="mods:dateCreated[@point!='start' and @point!='end']">
 		  <tr><td><xsl:value-of select="$dateCreated"/></td><td>
 				<xsl:value-of select="."/>
 			</td></tr>
 		</xsl:for-each>
-
 		<xsl:for-each select="mods:dateCaptured[@point!='start' and @point!='end']">
 		  <tr><td><xsl:value-of select="$dateCaptured"/></td><td>
 				<xsl:value-of select="."/>
 			</td></tr>
 		</xsl:for-each>
-
 		<xsl:for-each select="mods:dateOther[@point!='start' and @point!='end']">
 		  <tr><td><xsl:value-of select="$dateOther"/></td><td>
 				<xsl:value-of select="."/>
 			</td></tr>
 		</xsl:for-each>
-
-
-
 		<xsl:for-each select="mods:publisher">
 		  <xsl:if test="normalize-space(mods:publisher)">
 		  <tr><td><xsl:value-of select="$publisher"/></td><td>			
@@ -325,7 +321,9 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		  </td></tr>
 		  </xsl:if>
 		</xsl:for-each>
+
 	</xsl:template>
+-->
 <!--
 	<xsl:template match="mods:dateIssued | mods:dateCreated | mods:dateCaptured">
 		<dc:date>
@@ -344,6 +342,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		</dc:date>
 	</xsl:template>
 -->
+
 	<xsl:template match="mods:genre">
 	  <xsl:if test="normalize-space()">
 	  <tr><td><xsl:value-of select="$genre"/></td><td>
