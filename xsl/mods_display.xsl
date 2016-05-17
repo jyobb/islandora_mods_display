@@ -286,10 +286,17 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 </xsl:template>
 -->	
 	<xsl:template match="mods:originInfo">
-		<xsl:if test="mods:dateIssued"><tr><td><xsl:copy-of select="name(mods:dateIssued)"/></td><td><xsl:value-of select="."/></td></tr></xsl:if>
-		<xsl:if test="mods:dateCreated"><tr><td><xsl:copy-of select="name(mods:dateCreated)"/></td><td><xsl:value-of select="."/></td></tr></xsl:if>
-		<xsl:if test="mods:dateCaptured"><tr><td><xsl:copy-of select="name(mods:dateCaptured)"/></td><td><xsl:value-of select="."/></td></tr></xsl:if>
-		<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr>
+		<!--<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr> -->
+		<xsl:if test="mods:dateIssued"><tr><td>
+		<xsl:value-of select="$dateIssued"/>
+		</td><td><xsl:value-of select="."/></td></tr></xsl:if>
+		<xsl:if test="mods:dateCreated"><tr><td>
+		<xsl:value-of select="$dateCreated"/>
+		</td><td><xsl:value-of select="."/></td></tr></xsl:if>
+		<xsl:if test="mods:dateCaptured"><tr><td>
+		<xsl:value-of select="$dateCreated"/>
+		</td><td><xsl:value-of select="."/></td></tr></xsl:if>
+	<!--	<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr> -->
 	</xsl:template>
 <!--	
 	<xsl:template match="mods:originInfo">
