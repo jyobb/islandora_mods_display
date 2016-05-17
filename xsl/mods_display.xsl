@@ -279,12 +279,6 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</xsl:template>
 
 	<!-- date stuff -->
-<!--
-<xsl:template match="mods:originInfo">
-	<tr><td>aoeuaoeuaoeu</td><td><xsl:value-of select="."/></td></tr>
-
-</xsl:template>
--->	
 	<xsl:template match="mods:originInfo">
 		<!--<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr> -->
 		<xsl:if test="mods:dateIssued"><tr><td><xsl:value-of select="$dateIssued"/></td>
@@ -292,7 +286,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		<xsl:matching-substring>
 		<xsl:text>"match"</xsl:text></xsl:matching-substring>
 	    </xsl:analyze-string> -->
-		<xsl:value-of select="."/></td></tr></xsl:if>
+			<xsl:value-of select="."/></td></tr></xsl:if>
 		
 		<xsl:if test="mods:dateCreated"><tr><td><xsl:value-of select="$dateCreated"/></td>
 	<td>
@@ -481,12 +475,25 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		-->
 	</xsl:template>
 
+<!-- will's template for physloc -->
+	<xsl:template match="mods:location">
+	<xsl:for-each select="mods:physicalLocation">
+		<tr><td><xsl:value-of select="@displayLabel"/></td><td><xsl:value-of select="."/></td></tr>
+	</xsl:for-each>
+
+<!-- <xsl:value-of select="physicalLocation/@displayLabel"/> -->
+
+	</xsl:template>
+
+<!--
 	<xsl:template match="mods:location">
 	  <xsl:if test="normalize-space(mods:physicalLocation)">
-	    <tr><td><xsl:value-of select="$physicalLocation"/></td><td>
+	    <tr><td><xsl:choose><xsl:when test="not(@displayLabel)">
+                                <xsl:value-of select="$physicalLocation"/>
+                        </xsl:when></xsl:choose>
+                        <xsl:value-of select="@displayLabel"/></td><td>
 		<xsl:for-each select="mods:physicalLocation">
 		  <xsl:value-of select="."/>
-		  <xsl:if test="position()!=last()">--</xsl:if>
 		</xsl:for-each>
 	    </td></tr>
 	  </xsl:if>
@@ -494,17 +501,17 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	  <tr><td><xsl:value-of select="$shelfLocation"/></td><td>
 	      <xsl:for-each select="mods:shelfLocation">
 		<xsl:value-of select="."/>
-		<xsl:if test="position()!=last()">--</xsl:if>
 	      </xsl:for-each>
 	  </td></tr>
 	  </xsl:if>
+-->
 	<!--  <xsl:if test="normalize-space(mods:url)">
 	    <tr><td><xsl:value-of select="$url"/></td><td>
 		<xsl:for-each select="mods:url">
 		  <xsl:value-of select="."/>
 		</xsl:for-each>
 	    </td></tr>
-	  </xsl:if>  -->
+	  </xsl:if> 
 	  <xsl:if test="normalize-space(mods:recommendedCitation)">
 	    <tr><td><xsl:value-of select="$recommendedCitation"/></td><td>
 		<xsl:for-each select="mods:recommendedCitation">
@@ -516,7 +523,6 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		<tr><td><xsl:value-of select="$holdingSubLocation"/></td><td>
 		  <xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:sublocation">
 		    <xsl:value-of select="."/>
-		    <xsl:if test="position()!=last()">--</xsl:if>
 		  </xsl:for-each>
 		  </td></tr>
 	  </xsl:if>
@@ -524,7 +530,6 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		<tr><td><xsl:value-of select="$holdingShelfLocator"/></td><td>
 		  <xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:shelfLocator">
 		    <xsl:value-of select="."/>
-		    <xsl:if test="position()!=last()">--</xsl:if>
 		  </xsl:for-each>
 		  </td></tr>
 	  </xsl:if>
@@ -536,6 +541,8 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		</td></tr>
 	  </xsl:if>
 	</xsl:template>
+-->
+
 <!--
 	<xsl:template match="mods:location/mods:holdingSimple/mods:copyInformation">
 	  <dc:identifier>
@@ -546,7 +553,6 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	  </dc:identifier>
 	</xsl:template>
 -->
-
 	<xsl:template match="mods:language">
 <xsl:if test="mods:language =''">
 	  <tr><td><xsl:value-of select="$language"/></td><td>
@@ -592,11 +598,9 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</xsl:template>
 
 	<xsl:template match="mods:accessCondition">
-	  <xsl:if test="normalize-space(.)">
-	    <tr><td><xsl:value-of select="$accessCondition"/></td><td>
-		<xsl:value-of select="."/>
-	    </td></tr>
-	    </xsl:if>
+	 <tr><td><xsl:value-of select="@displayLabel"/></td><td><xsl:value-of select="."/></td></tr>
+
+
 	</xsl:template>
 
 	<xsl:template name="name">
