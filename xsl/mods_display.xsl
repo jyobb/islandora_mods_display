@@ -117,15 +117,15 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</xsl:if>
 			<xsl:value-of select="mods:title"/>
 			<xsl:if test="mods:subTitle">
-				<xsl:text>: </xsl:text>
+				<!-- <xsl:text>: </xsl:text> -->
 				<xsl:value-of select="mods:subTitle"/>
 			</xsl:if>
 			<xsl:if test="mods:partNumber">
-				<xsl:text>. </xsl:text>
+				<!--<xsl:text>. </xsl:text> -->
 				<xsl:value-of select="mods:partNumber"/>
 			</xsl:if>
 			<xsl:if test="mods:partName">
-				<xsl:text>. </xsl:text>
+				<!--<xsl:text>. </xsl:text> -->
 				<xsl:value-of select="mods:partName"/>
 			</xsl:if>
 			</td></tr>
@@ -287,15 +287,20 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 -->	
 	<xsl:template match="mods:originInfo">
 		<!--<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr> -->
-		<xsl:if test="mods:dateIssued"><tr><td>
-		<xsl:value-of select="$dateIssued"/>
-		</td><td><xsl:value-of select="."/></td></tr></xsl:if>
-		<xsl:if test="mods:dateCreated"><tr><td>
-		<xsl:value-of select="$dateCreated"/>
-		</td><td><xsl:value-of select="."/></td></tr></xsl:if>
-		<xsl:if test="mods:dateCaptured"><tr><td>
-		<xsl:value-of select="$dateCreated"/>
-		</td><td><xsl:value-of select="."/></td></tr></xsl:if>
+		<xsl:if test="mods:dateIssued"><tr><td><xsl:value-of select="$dateIssued"/></td>
+	<td><!--<xsl:analyze-string select="." regex="([0-9]{8})">
+		<xsl:matching-substring>
+		<xsl:text>"match"</xsl:text></xsl:matching-substring>
+	    </xsl:analyze-string> -->
+		<xsl:value-of select="."/></td></tr></xsl:if>
+		
+		<xsl:if test="mods:dateCreated"><tr><td><xsl:value-of select="$dateCreated"/></td>
+	<td>
+		<xsl:value-of select="."/></td></tr></xsl:if>
+		
+		<xsl:if test="mods:dateCaptured"><tr><td><xsl:value-of select="$dateCreated"/></td>
+	<td>
+		<xsl:value-of select="."/></td></tr></xsl:if>
 	<!--	<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr> -->
 	</xsl:template>
 <!--	
