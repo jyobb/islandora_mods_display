@@ -103,14 +103,17 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		</xsl:choose>
 	</xsl:template>
 	
-	<xsl:template match="mods:titleInfo">
-		<!-- <dc:title> -->
-		<tr><td>
-			<xsl:choose><xsl:when test="not(@displayLabel)">
-				<xsl:value-of select="$title"/>
-			</xsl:when></xsl:choose>
-			<xsl:value-of select="@displayLabel"/>
-		</td><td>
+	<xsl:template match="mods:titleInfo[normalize-space(.)]">
+	<!-- <dc:title> -->
+			<tr><td>
+			<xsl:choose>
+			  <xsl:when test="not(@displayLabel)">
+			   <xsl:value-of select="$title"/>
+			 </xsl:when></xsl:choose>
+			 <xsl:value-of select="@displayLabel"/>
+			
+			</td><td>
+
 			<xsl:value-of select="mods:nonSort"/>
 			<xsl:if test="mods:nonSort">
 				<xsl:text> </xsl:text>
@@ -279,24 +282,41 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</xsl:template>
 
 	<!-- date stuff -->
+<!--
 	<xsl:template match="mods:originInfo">
-		<!--<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr> -->
+	<xsl:for-each select="mods:dateIssued">
+	<tr><td><xsl:value-of select="$dateCreated"/></td><td>aoeuaoeu<xsl:value-of select="."/></td></tr>
+	</xsl:for-each>
+	</xsl:template>
+-->
+<xsl:template match="mods:originInfo">
+       <xsl:if test="mods:dateIssued[contains(@point,'start')] and mods:dateIssued[contains(@point,'end')] and not(mods:dateIssued[@qualifier])"><tr><td><xsl:value-of select="$dateIssued"/></td><td><xsl:value-of select="mods:dateIssued[contains(@point,'start')]"/>-<xsl:value-of select="mods:dateIssued[contains(@point,'end')]"/></td></tr></xsl:if>
+       <xsl:if test="mods:dateIssued[contains(@point,'start')] and mods:dateIssued[contains(@point,'end')] and mods:dateIssued[@qualifier]"><tr><td><xsl:value-of select="$dateIssued"/></td><td>Approximately <xsl:value-of select="mods:dateIssued[contains(@point,'start')]"/>-<xsl:value-of select="mods:dateIssued[contains(@point,'end')]"/></td></tr></xsl:if>
+       <xsl:if test="mods:dateIssued[contains(@keydate,'yes')] and not(mods:dateIssued[@point]) and not(mods:dateIssued[@qualifier])"><tr><td><xsl:value-of select="$dateIssued"/></td><td><xsl:value-of select="mods:dateIssued"/></td></tr></xsl:if>
+       <xsl:if test="mods:dateIssued[contains(@keydate,'yes')] and not(mods:dateIssued[@point]) and mods:dateIssued[@qualifier]"><tr><td><xsl:value-of select="$dateIssued"/></td><td>Approximately <xsl:value-of select="mods:dateIssued"/></td></tr></xsl:if>
+       <xsl:if test="mods:dateCreated"><tr><td><xsl:value-of select="$dateCreated"/></td><td><xsl:value-of select="mods:dateCreated"/></td></tr></xsl:if>
+       <xsl:if test="mods:dateCaptured"><tr><td><xsl:value-of select="$dateCaptured"/></td><td><xsl:value-of select="mods:dateCaptured"/></td></tr></xsl:if>
+   </xsl:template>
+<!--
+	<xsl:template match="mods:originInfo">
+		<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr>
 		<xsl:if test="mods:dateIssued"><tr><td><xsl:value-of select="$dateIssued"/></td>
-	<td><!--<xsl:analyze-string select="." regex="([0-9]{8})">
+	<td><xsl:analyze-string select="." regex="([0-9]{8})">
 		<xsl:matching-substring>
 		<xsl:text>"match"</xsl:text></xsl:matching-substring>
-	    </xsl:analyze-string> -->
+	    </xsl:analyze-string> 
 			<xsl:value-of select="."/></td></tr></xsl:if>
 		
 		<xsl:if test="mods:dateCreated"><tr><td><xsl:value-of select="$dateCreated"/></td>
 	<td>
 		<xsl:value-of select="."/></td></tr></xsl:if>
 		
-		<xsl:if test="mods:dateCaptured"><tr><td><xsl:value-of select="$dateCreated"/></td>
+		<xsl:if test="mods:dateCaptured"><tr><td><xsl:value-of select="$dateCaptured"/></td>
 	<td>
 		<xsl:value-of select="."/></td></tr></xsl:if>
-	<!--	<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr> -->
+	<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr>
 	</xsl:template>
+-->
 <!--	
 	<xsl:template match="mods:originInfo">
 		<xsl:apply-templates select="*[@point='start']"/>
@@ -478,7 +498,12 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 <!-- will's template for physloc -->
 	<xsl:template match="mods:location">
 	<xsl:for-each select="mods:physicalLocation">
-		<tr><td><xsl:value-of select="@displayLabel"/></td><td><xsl:value-of select="."/></td></tr>
+		<tr><td>
+		<xsl:choose><xsl:when test="not(@displayLabel)">
+                                <xsl:value-of select="$physicalLocation"/>
+                        </xsl:when></xsl:choose>
+                     <xsl:value-of select="@displayLabel"/>
+                </td><td><xsl:value-of select="."/></td></tr>
 	</xsl:for-each>
 
 <!-- <xsl:value-of select="physicalLocation/@displayLabel"/> -->
@@ -598,7 +623,12 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</xsl:template>
 
 	<xsl:template match="mods:accessCondition">
-	 <tr><td><xsl:value-of select="@displayLabel"/></td><td><xsl:value-of select="."/></td></tr>
+		 <tr><td><xsl:choose><xsl:when test="not(@displayLabel |@type)">
+                                <xsl:value-of select="$accessCondition"/>
+                        </xsl:when></xsl:choose>
+                     <xsl:value-of select="@displayLabel |@type"/>
+                </td><td>
+		<xsl:value-of select="."/></td></tr>
 
 
 	</xsl:template>
