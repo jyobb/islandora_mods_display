@@ -4,12 +4,12 @@
  * This file contains all theme and preprocess functions for islandora_mods_display.
  */
 
-
 /**
  * Implements hook_preprocess().
  */
 function islandora_mods_display_preprocess_islandora_mods_display_display(array &$variables) {
   $object = $variables['islandora_object'];
+  $mods = False;  
 
   if (islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $object['MODS'])) {
     try {
