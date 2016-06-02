@@ -114,10 +114,16 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			
 			</td><td>
 
-			<xsl:value-of select="mods:nonSort"/>
-			<xsl:if test="mods:nonSort">
-				<xsl:text> </xsl:text>
-			</xsl:if>
+			<xsl:variable name="nonSortRegEx" select="'[Ane]$'"/>
+        		<xsl:value-of select="mods:nonSort"/>
+        		<xsl:if test="mods:nonSort">
+            			<xsl:choose>
+        	 			<xsl:when test="matches(mods:nonSort, $nonSortRegEx)">
+                     				<xsl:text> </xsl:text>
+                			</xsl:when>
+                			<xsl:otherwise/>
+            			</xsl:choose>  
+        		</xsl:if>
 			<xsl:value-of select="mods:title"/>
 			<xsl:if test="mods:subTitle">
 				<!-- <xsl:text>: </xsl:text> -->
