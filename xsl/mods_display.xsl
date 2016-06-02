@@ -114,6 +114,18 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			
 			</td><td>
 
+<!--<xsl:if test="position()!=last()">-->
+
+<!--
+                        <xsl:value-of select="mods:nonSort"/>
+			<xsl:if test="mods:nonSort">
+				<xsl:analyze-string select="." regex="[Ane]$">
+                		<xsl:matching-substring>
+				<xsl:text> </xsl:text>
+				</xsl:matching-substring></xsl:analyze-string> 
+			</xsl:if>
+-->
+<!--
 			<xsl:variable name="nonSortRegEx" select="'[Ane]$'"/>
         		<xsl:value-of select="mods:nonSort"/>
         		<xsl:if test="mods:nonSort">
@@ -124,6 +136,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
                 			<xsl:otherwise/>
             			</xsl:choose>  
         		</xsl:if>
+-->
 			<xsl:value-of select="mods:title"/>
 			<xsl:if test="mods:subTitle">
 				<!-- <xsl:text>: </xsl:text> -->
