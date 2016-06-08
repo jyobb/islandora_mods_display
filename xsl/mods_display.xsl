@@ -125,6 +125,11 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				</xsl:matching-substring></xsl:analyze-string> 
 			</xsl:if>
 -->
+			<xsl:value-of select="mods:nonSort"/>
+			<xsl:if test="mods:nonSort">
+				<xsl:text> </xsl:text>
+			</xsl:if>
+
 <!--
 			<xsl:variable name="nonSortRegEx" select="'[Ane]$'"/>
         		<xsl:value-of select="mods:nonSort"/>
@@ -137,6 +142,8 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
             			</xsl:choose>  
         		</xsl:if>
 -->
+
+
 			<xsl:value-of select="mods:title"/>
 			<xsl:if test="mods:subTitle">
 				<!-- <xsl:text>: </xsl:text> -->
@@ -207,7 +214,6 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		</xsl:for-each>
 	      </td>  </tr>
 	  </xsl:if>			
-
 	  <xsl:if test="normalize-space(mods:occupation)">
 	    <xsl:for-each select="mods:occupation">
 	      <tr><td><xsl:value-of select="$subjectOccupation"/></td><td>
@@ -252,7 +258,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:temporal)">
 	    <xsl:if test="mods:temporal">
-	      <tr><td><xsl:value-of select="subjectTemporal"/></td><td>
+	      <tr><td><xsl:value-of select="$subjectTemporal"/></td><td>
 		  <xsl:for-each select="mods:temporal">
 		    <xsl:value-of select="."/>
 		    <xsl:if test="position()!=last()">-</xsl:if>
@@ -315,6 +321,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
        <xsl:if test="mods:dateIssued[contains(@keydate,'yes')] and not(mods:dateIssued[@point]) and mods:dateIssued[@qualifier]"><tr><td><xsl:value-of select="$dateIssued"/></td><td>Approximately <xsl:value-of select="mods:dateIssued"/></td></tr></xsl:if>
        <xsl:if test="mods:dateCreated"><tr><td><xsl:value-of select="$dateCreated"/></td><td><xsl:value-of select="mods:dateCreated"/></td></tr></xsl:if>
        <xsl:if test="mods:dateCaptured"><tr><td><xsl:value-of select="$dateCaptured"/></td><td><xsl:value-of select="mods:dateCaptured"/></td></tr></xsl:if>
+       <xsl:if test="mods:dateIssued"><tr><td><xsl:value-of select="$dateIssued"/></td><td><xsl:value-of select="mods:dateIssued"/></td></tr></xsl:if>
    </xsl:template>
 <!--
 	<xsl:template match="mods:originInfo">
