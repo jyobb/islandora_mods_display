@@ -934,6 +934,7 @@
       </tr>
     </xsl:for-each>
 
+    <!--
     <xsl:for-each select="mods:shelfLocator">
       <tr>
         <td class="mods-metadata-label">
@@ -950,7 +951,7 @@
           <xsl:value-of select="normalize-space(.)"/>
         </td>
       </tr>
-    </xsl:for-each>
+    </xsl:for-each> -->
 
     <!--
     <xsl:if test="mods:shelfLocator">
