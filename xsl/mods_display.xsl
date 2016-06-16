@@ -66,7 +66,7 @@
   <xsl:variable name="abstract">Description</xsl:variable>
   <xsl:variable name="toc">Table of Contents</xsl:variable>
   <xsl:variable name="note">Note</xsl:variable>
-  <xsl:variable name="dateIssued">Date Issued</xsl:variable>
+  <xsl:variable name="dateIssued">Date Issued</xsl:variable>ƒ
   <xsl:variable name="dateCreated">Date Created</xsl:variable>
   <xsl:variable name="dateCaptured">Date Captured</xsl:variable>
   <xsl:variable name="dateOther">Date (Other)</xsl:variable>
@@ -79,7 +79,7 @@
   <xsl:variable name="provenance">Provenance</xsl:variable>
   <xsl:variable name="identifier">Identifier</xsl:variable>
   <xsl:variable name="physicalLocation">Physical Location</xsl:variable>
-  <xsl:variable name="shelfLocation">Shelf Location</xsl:variable>
+  <xsl:variable name="shelfLocator">Shelf Locator</xsl:variable>
   <xsl:variable name="url">URL</xsl:variable>
   <xsl:variable name="holdingSubLocation">Holding Sublocation</xsl:variable>
   <xsl:variable name="holdingShelfLocator">Holding Shelf Locator</xsl:variable>
@@ -934,20 +934,19 @@
       </tr>
     </xsl:for-each>
 
-    <!-- MAM... shelfLocation appears to be invalid element.
-    <xsl:if test="mods:shelfLocation">
+    <xsl:if test="mods:shelfLocator">
       <tr>
         <td class="mods-metadata-label">
-          <xsl:value-of select="$shelfLocation"/>
+          <xsl:value-of select="$shelfLocator"/>
         </td>
         <td>
-          <xsl:for-each select="mods:shelfLocation">
+          <xsl:for-each select="mods:shelfLocator">
             <xsl:value-of select="normalize-space(.)"/>
             <xsl:if test="position()!=last()">-</xsl:if>
           </xsl:for-each>
         </td>
       </tr>
-    </xsl:if> -->
+    </xsl:if>
 
     <xsl:for-each select="mods:url">
       <tr>
