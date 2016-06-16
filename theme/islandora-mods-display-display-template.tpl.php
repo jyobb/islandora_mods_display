@@ -11,4 +11,4 @@
  * @see theme_unicorns_are_awesome_display()
  */
 ?>
-<?php print $metadata;?>
+<?php if (isset($metadata)) { print $metadata; }?>

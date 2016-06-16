@@ -83,21 +83,15 @@ function islandora_mods_display_display_callback(AbstractObject $object, $print 
 }
 
 /**
- * Metadata display callback for rendering metadata from MODS.
+ * Metadata display callback for rendering $description metadata from MODS.
  *
  * @param AbstractObject $object
  *   An AbstractObject representing an object within Fedora.
  *
  * @return string
- *   Markup representing the metadata display pulled from MODS.
+ *   Markup representing the $description metadata display pulled from MODS.
  */
 function islandora_mods_display_description_callback(AbstractObject $object) {
-  // For example purposes of the object is not a basic image let's theme it
-  // instead.
-
-    $elements = array(
-      'islandora_object' => $object,
-    );
+    $elements = array('islandora_object' => $object);
     return theme('islandora_mods_display_description', $elements);
-
 }
