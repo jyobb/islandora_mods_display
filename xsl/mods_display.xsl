@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="mods dc xsi oai_dc srw_dc"
-  xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema"
-  xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="mods xsi"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <!--
     This stylesheet modified by M. McFate, Grinnell College, from 24-Feb-2015 to ?????????? for use
@@ -66,7 +64,7 @@
   <xsl:variable name="abstract">Description</xsl:variable>
   <xsl:variable name="toc">Table of Contents</xsl:variable>
   <xsl:variable name="note">Note</xsl:variable>
-  <xsl:variable name="dateIssued">Date Issued</xsl:variable>ƒ
+  <xsl:variable name="dateIssued">Date Issued</xsl:variable>
   <xsl:variable name="dateCreated">Date Created</xsl:variable>
   <xsl:variable name="dateCaptured">Date Captured</xsl:variable>
   <xsl:variable name="dateOther">Date (Other)</xsl:variable>
@@ -218,7 +216,7 @@
 
   <!-- Subjects with NO @authority attribute and with a specific child -->
   <xsl:template
-    match="mods:subject[mods:topic|mods:occupation|mods:geographic|mods:hierarchicalGeographic|mods:cartographics|mods:temporal] ">
+      match="mods:subject[mods:topic|mods:occupation|mods:geographic|mods:hierarchicalGeographic|mods:cartographics|mods:temporal] ">
 
     <!-- MAM...show displayLabel attribute as the label but only if it exists! -->
     <xsl:if test="mods:topic[@displayLabel]">
@@ -312,7 +310,7 @@
           </td>
           <td>
             <xsl:for-each
-              select="mods:continent|mods:country|mods:province|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area">
+                select="mods:continent|mods:country|mods:province|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area">
               <xsl:value-of select="normalize-space(.)"/>
               <xsl:if test="position()!=last()">--</xsl:if>
             </xsl:for-each>
@@ -378,7 +376,7 @@
         </td>
         <td>
           <xsl:for-each
-            select="*[local-name()!='cartographics' and local-name()!='geographicCode' and local-name()!='hierarchicalGeographic'] ">
+              select="*[local-name()!='cartographics' and local-name()!='geographicCode' and local-name()!='hierarchicalGeographic'] ">
             <xsl:value-of select="."/>
             <xsl:if test="position()!=last()">--</xsl:if>
           </xsl:for-each>
@@ -390,7 +388,7 @@
 
   <!-- Subjects WITH @authority attribute and with a specific child -->
   <xsl:template
-    match="mods:subject[@authority='lcsh'][mods:topic | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] ">
+      match="mods:subject[@authority='lcsh'][mods:topic | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] ">
 
     <xsl:if test="mods:topic">
       <xsl:for-each select="mods:topic">
@@ -479,7 +477,7 @@
           </td>
           <td>
             <xsl:for-each
-              select="mods:continent|mods:country|mods:province|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area">
+                select="mods:continent|mods:country|mods:province|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area">
               <xsl:value-of select="normalize-space(.)"/>
               <xsl:if test="position()!=last()">--</xsl:if>
             </xsl:for-each>
@@ -543,7 +541,7 @@
         </td>
         <td>
           <xsl:for-each
-            select="*[local-name()!='cartographics' and local-name()!='geographicCode' and local-name()!='hierarchicalGeographic'] ">
+              select="*[local-name()!='cartographics' and local-name()!='geographicCode' and local-name()!='hierarchicalGeographic'] ">
             <xsl:value-of select="normalize-space(.)"/>
             <xsl:if test="position()!=last()">--</xsl:if>
           </xsl:for-each>
@@ -605,17 +603,17 @@
 
   <!-- Provenance or Acquisition or Provenance History -->
   <xsl:template
-    match="mods:note[@type='provenance' or @type='acquisition' or @type='provenance history']">
+      match="mods:note[@type='provenance' or @type='acquisition' or @type='provenance history']">
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-        <xsl:when test="@displayLabel">
-          <xsl:value-of select="@displayLabel"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$provenance"/>
-        </xsl:otherwise>
-      </xsl:choose>
+          <xsl:when test="@displayLabel">
+            <xsl:value-of select="@displayLabel"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$provenance"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </td>
       <td>
         <xsl:value-of select="normalize-space(.)"/>
@@ -625,7 +623,7 @@
 
   <!-- NOT Provenance nor Acquisition nor Provenance History -->
   <xsl:template
-    match="mods:note[@type!='provenance' and @type!='acquisition' and @type!='provenance history']">
+      match="mods:note[@type!='provenance' and @type!='acquisition' and @type!='provenance history']">
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
@@ -871,7 +869,7 @@
 
   <!-- Physical description... extent, form, internetMediaType, digitalOrigin or note -->
   <xsl:template
-    match="mods:physicalDescription[mods:extent|mods:form|mods:internetMediaType|mods:digitalOrigin|mods:note]">
+      match="mods:physicalDescription[mods:extent|mods:form|mods:internetMediaType|mods:digitalOrigin|mods:note]">
     <xsl:for-each select="./*">
       <tr>
         <td class="mods-metadata-label">
@@ -934,7 +932,6 @@
       </tr>
     </xsl:for-each>
 
-    <!--
     <xsl:for-each select="mods:shelfLocator">
       <tr>
         <td class="mods-metadata-label">
@@ -951,22 +948,7 @@
           <xsl:value-of select="normalize-space(.)"/>
         </td>
       </tr>
-    </xsl:for-each> -->
-
-    <!--
-    <xsl:if test="mods:shelfLocator">
-      <tr>
-        <td class="mods-metadata-label">
-          <xsl:value-of select="$shelfLocator"/>
-        </td>
-        <td>
-          <xsl:for-each select="mods:shelfLocator">
-            <xsl:value-of select="normalize-space(.)"/>
-            <xsl:if test="position()!=last()">-</xsl:if>
-          </xsl:for-each>
-        </td>
-      </tr>
-    </xsl:if> -->
+    </xsl:for-each>
 
     <xsl:for-each select="mods:url">
       <tr>
@@ -1049,10 +1031,10 @@
               <xsl:value-of select="normalize-space(.)"/>
             </xsl:when>
             <xsl:when test="@type='code'"/>
-       <!--   <xsl:text> [</xsl:text>                         MAM removed on 01-December-2015
-              <xsl:value-of select="normalize-space(.)"/>
-              <xsl:text>] </xsl:text>
-            </xsl:when> -->
+            <!--   <xsl:text> [</xsl:text>                         MAM removed on 01-December-2015
+                   <xsl:value-of select="normalize-space(.)"/>
+                   <xsl:text>] </xsl:text>
+                 </xsl:when> -->
           </xsl:choose>
         </xsl:for-each>
 
@@ -1062,30 +1044,30 @@
 
   <!-- Related Item ... suppress display of @type="constituent"! -->
   <xsl:template match="mods:relatedItem[not(@type='constituent')]">
-      <xsl:choose>
-        <!-- MM adding this to inhibit display of 'admin' (private) notes. 24-Feb-2015 -->
-        <xsl:when test="@type='admin'"/>
-        <xsl:otherwise>
-          <tr>
-            <td class="mods-metadata-label">
-              <xsl:choose>
-                <xsl:when test="*[@displayLabel]">
-                  <xsl:value-of select="@displayLabel"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:value-of select="$relatedItem"/>
-                </xsl:otherwise>
-              </xsl:choose>
-            </td>
-            <td>
-              <xsl:for-each select="mods:titleInfo|mods:identifier|mods:location|mods:note">
-                <xsl:value-of select="."/>
-                <xsl:if test="position()!=last()"> -- </xsl:if>
-              </xsl:for-each>
-            </td>
-          </tr>
-        </xsl:otherwise>
-      </xsl:choose>
+    <xsl:choose>
+      <!-- MM adding this to inhibit display of 'admin' (private) notes. 24-Feb-2015 -->
+      <xsl:when test="@type='admin'"/>
+      <xsl:otherwise>
+        <tr>
+          <td class="mods-metadata-label">
+            <xsl:choose>
+              <xsl:when test="*[@displayLabel]">
+                <xsl:value-of select="@displayLabel"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$relatedItem"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </td>
+          <td>
+            <xsl:for-each select="mods:titleInfo|mods:identifier|mods:location|mods:note">
+              <xsl:value-of select="."/>
+              <xsl:if test="position()!=last()"> -- </xsl:if>
+            </xsl:for-each>
+          </td>
+        </tr>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- Access Condition -->
