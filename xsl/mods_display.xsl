@@ -649,11 +649,19 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</xsl:template>
 
 	<xsl:template match="mods:accessCondition">
-		 <tr><td><xsl:choose><xsl:when test="not(@displayLabel |@type)">
-                                <xsl:value-of select="$accessCondition"/>
-                        </xsl:when></xsl:choose>
-                     <xsl:value-of select="@displayLabel |@type"/>
-                </td><td>
+		 <tr><td>
+		 	<xsl:choose>
+			 	<xsl:when test="@displayLabel">
+			 		<xsl:value-of select="@displayLabel"/>
+	            </xsl:when>
+			 	<xsl:when test="not (@displayLabel) and @type">
+			 		<xsl:value-of select="@type"/>
+			 	</xsl:when>
+			 	<xsl:otherwise>
+			 		<xsl:value-of select="$accessCondition"/>
+			 	</xsl:otherwise>
+		 	 </xsl:choose>
+          </td><td>
 		<xsl:value-of select="."/></td></tr>
 
 
