@@ -315,6 +315,72 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</xsl:template>
 -->
 <xsl:template match="mods:originInfo">
+	<xsl:if test="mods:dateCreated">
+		<tr>
+			<td><xsl:value-of select="$dateCreated"/></td>
+			<td><xsl:value-of select="mods:dateCreated"/>
+				<xsl:if test="mods:dateCreated/@qualifier">
+					<xsl:text> (</xsl:text>
+					<xsl:value-of select="mods:dateCreated/@qualifier"/>
+					<xsl:text>)</xsl:text>
+				</xsl:if>
+				<xsl:if test="mods:dateCreated[@point='end']">
+					<xsl:text> - </xsl:text>
+					<xsl:value-of select="mods:dateCreated[@point='end']"/>
+					<xsl:if test="mods:dateCreated/@qualifier">
+						<xsl:text> (</xsl:text>
+						<xsl:value-of select="mods:dateCreated/@qualifier"/>
+						<xsl:text>)</xsl:text>
+					</xsl:if>
+				</xsl:if>
+			</td>
+		</tr>
+	</xsl:if>
+	<xsl:if test="mods:dateCaptured">
+		<tr>
+			<td><xsl:value-of select="$dateCaptured"/></td>
+			<td><xsl:value-of select="mods:dateCaptured"/>
+				<xsl:if test="mods:dateCaptured/@qualifier">
+					<xsl:text> (</xsl:text>
+					<xsl:value-of select="mods:dateCaptured/@qualifier"/>
+					<xsl:text>)</xsl:text>
+				</xsl:if>
+				<xsl:if test="mods:dateCaptured[@point='end']">
+					<xsl:text> - </xsl:text>
+					<xsl:value-of select="mods:dateCaptured[@point='end']"/>
+					<xsl:if test="mods:dateCaptured/@qualifier">
+						<xsl:text> (</xsl:text>
+						<xsl:value-of select="mods:dateCaptured/@qualifier"/>
+						<xsl:text>)</xsl:text>
+					</xsl:if>
+				</xsl:if>
+			</td>
+		</tr>
+	</xsl:if>
+	<xsl:if test="mods:dateIssued">
+		<tr>
+			<td><xsl:value-of select="$dateIssued"/></td>
+			<td><xsl:value-of select="mods:dateIssued"/>
+				<xsl:if test="mods:dateIssued/@qualifier">
+					<xsl:text> (</xsl:text>
+					<xsl:value-of select="mods:dateIssued/@qualifier"/>
+					<xsl:text>)</xsl:text>
+				</xsl:if>
+				<xsl:if test="mods:dateIssued[@point='end']">
+					<xsl:text> - </xsl:text>
+					<xsl:value-of select="mods:dateIssued[@point='end']"/>
+					<xsl:if test="mods:dateIssued/@qualifier">
+						<xsl:text> (</xsl:text>
+						<xsl:value-of select="mods:dateIssued/@qualifier"/>
+						<xsl:text>)</xsl:text>
+					</xsl:if>
+				</xsl:if>
+			</td>
+		</tr>
+	</xsl:if>
+</xsl:template>	
+	<!--
+<xsl:template match="mods:originInfo">
        <xsl:if test="mods:dateIssued[contains(@point,'start')] and mods:dateIssued[contains(@point,'end')] and not(mods:dateIssued[@qualifier])"><tr><td><xsl:value-of select="$dateIssued"/></td><td><xsl:value-of select="mods:dateIssued[contains(@point,'start')]"/>-<xsl:value-of select="mods:dateIssued[contains(@point,'end')]"/></td></tr></xsl:if>
        <xsl:if test="mods:dateIssued[contains(@point,'start')] and mods:dateIssued[contains(@point,'end')] and mods:dateIssued[@qualifier]"><tr><td><xsl:value-of select="$dateIssued"/></td><td>Approximately <xsl:value-of select="mods:dateIssued[contains(@point,'start')]"/>-<xsl:value-of select="mods:dateIssued[contains(@point,'end')]"/></td></tr></xsl:if>
        <xsl:if test="mods:dateIssued[contains(@keydate,'yes')] and not(mods:dateIssued[@point]) and not(mods:dateIssued[@qualifier])"><tr><td><xsl:value-of select="$dateIssued"/></td><td><xsl:value-of select="mods:dateIssued"/></td></tr></xsl:if>
@@ -323,6 +389,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
        <xsl:if test="mods:dateCaptured"><tr><td><xsl:value-of select="$dateCaptured"/></td><td><xsl:value-of select="mods:dateCaptured"/></td></tr></xsl:if>
        <xsl:if test="mods:dateIssued"><tr><td><xsl:value-of select="$dateIssued"/></td><td><xsl:value-of select="mods:dateIssued"/></td></tr></xsl:if>
    </xsl:template>
+   -->
 <!--
 	<xsl:template match="mods:originInfo">
 		<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr>
@@ -661,7 +728,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			 		<xsl:value-of select="$accessCondition"/>
 			 	</xsl:otherwise>
 		 	 </xsl:choose>
-          </td><td>
+                </td><td>
 		<xsl:value-of select="."/></td></tr>
 
 
