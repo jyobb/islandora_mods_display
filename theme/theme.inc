@@ -22,7 +22,7 @@ function islandora_mods_display_preprocess_islandora_mods_display_display(array 
 
   if ($mods) {
 
-  $params = array('title' => 'Titles',
+  $params = array('title' => 'Title',
 		  'name' => 'Name', 
 		  'classification' => 'Classification', 
 		  'subjectTopic' => 'Subject Topic',
