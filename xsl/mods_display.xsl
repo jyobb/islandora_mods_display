@@ -113,7 +113,7 @@
   <!-- Now for all the detail templates -->
   <!-- MM Changed 05-Nov-2015... Adding class='mods-metadata-label' to all labels. -->
 
-  <!-- Name Info -->
+  <!-- Name with @type -->
   <xsl:template match="mods:name[@type][mods:role/mods:roleTerm]">
     <tr class="do-not-hide">
       <td class="mods-metadata-label">
@@ -131,6 +131,26 @@
       </td>
     </tr>
   </xsl:template>
+
+  <!-- Name with NO attribute -->
+  <xsl:template match="mods:name[not(@*)][mods:role/mods:roleTerm]">
+    <tr class="do-not-hide">
+      <td class="mods-metadata-label">
+        <xsl:choose>
+          <xsl:when test="self::node()[@displayLabel]">
+            <xsl:value-of select="self::node()/@displayLabel"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="mods:role/mods:roleTerm"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </td>
+      <td>
+        <xsl:value-of select="mods:namePart[not(@type)]"/>
+      </td>
+    </tr>
+  </xsl:template>
+
 
   <!-- Original construct for creator/contributor names
     <xsl:template match="mods:name">
@@ -176,21 +196,23 @@
 
   <!-- MAM addition for Alternative Title -->
   <xsl:template match="mods:titleInfo[@type='alternative']">
-    <tr>
-      <td class="mods-metadata-label">
-        <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
-            <xsl:value-of select="@displayLabel"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="$altTitle"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </td>
-      <td>
-        <xsl:value-of select="normalize-space(mods:title)"/>
-      </td>
-    </tr>
+    <xsl:for-each select="mods:title">
+      <tr>
+        <td class="mods-metadata-label">
+          <xsl:choose>
+            <xsl:when test="*[@displayLabel]">
+              <xsl:value-of select="@displayLabel"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$altTitle"/>
+            </xsl:otherwise>
+          </xsl:choose>
+          <td>
+            <xsl:value-of select="normalize-space(.)"/>
+          </td>
+        </td>
+      </tr>
+    </xsl:for-each>
   </xsl:template>
 
   <!-- Classification -->
@@ -312,7 +334,7 @@
             <xsl:for-each
                 select="mods:continent|mods:country|mods:province|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area">
               <xsl:value-of select="normalize-space(.)"/>
-              <xsl:if test="position()!=last()">--</xsl:if>
+              <!-- <xsl:if test="position()!=last()">-</xsl:if> -->
             </xsl:for-each>
           </td>
         </tr>
@@ -378,7 +400,8 @@
           <xsl:for-each
               select="*[local-name()!='cartographics' and local-name()!='geographicCode' and local-name()!='hierarchicalGeographic'] ">
             <xsl:value-of select="."/>
-            <xsl:if test="position()!=last()">--</xsl:if>
+            <!-- MAM removed 06-July-2016
+            <xsl:if test="position()!=last()">-</xsl:if>  -->
           </xsl:for-each>
         </td>
       </tr>
@@ -405,7 +428,7 @@
           </td>
           <td>
             <xsl:value-of select="normalize-space(.)"/>
-            <xsl:if test="position()!=last()">--</xsl:if>
+            <!--  <xsl:if test="position()!=last()">-</xsl:if> -->
           </td>
         </tr>
       </xsl:for-each>
@@ -426,7 +449,7 @@
           </td>
           <td>
             <xsl:value-of select="normalize-space(.)"/>
-            <xsl:if test="position()!=last()">--</xsl:if>
+            <!-- <xsl:if test="position()!=last()">-</xsl:if> -->
           </td>
         </tr>
       </xsl:for-each>
@@ -479,7 +502,7 @@
             <xsl:for-each
                 select="mods:continent|mods:country|mods:province|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area">
               <xsl:value-of select="normalize-space(.)"/>
-              <xsl:if test="position()!=last()">--</xsl:if>
+              <!-- <xsl:if test="position()!=last()">-</xsl:if> -->
             </xsl:for-each>
           </td>
         </tr>
@@ -521,7 +544,7 @@
         <td>
           <xsl:for-each select="mods:temporal">
             <xsl:value-of select="normalize-space(.)"/>
-            <xsl:if test="position()!=last()">-</xsl:if>
+            <!-- <xsl:if test="position()!=last()">-</xsl:if> -->
           </xsl:for-each>
         </td>
       </tr>
@@ -543,7 +566,7 @@
           <xsl:for-each
               select="*[local-name()!='cartographics' and local-name()!='geographicCode' and local-name()!='hierarchicalGeographic'] ">
             <xsl:value-of select="normalize-space(.)"/>
-            <xsl:if test="position()!=last()">--</xsl:if>
+            <!-- <xsl:if test="position()!=last()">-</xsl:if> -->
           </xsl:for-each>
         </td>
       </tr>
@@ -1060,7 +1083,7 @@
             </xsl:choose>
           </td>
           <td>
-            <xsl:for-each select="mods:titleInfo|mods:identifier|mods:location|mods:note">
+            <xsl:for-each select="mods:titleInfo/mods:title|mods:identifier|mods:location|mods:note">
               <xsl:value-of select="."/>
               <xsl:if test="position()!=last()"> -- </xsl:if>
             </xsl:for-each>
