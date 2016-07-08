@@ -186,34 +186,89 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		</td></tr>
 	</xsl:template>
 
-
-	<xsl:template match="mods:subject[mods:topic | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] ">
+	<xsl:template match="mods:subject[mods:topic][1]">
+		<tr>
+			<td>
+				<xsl:if test="normalize-space(mods:topic)">
+					<xsl:choose>
+						<xsl:when test="not(@displayLabel)">
+							<xsl:value-of select="$subjectTopic"/>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:value-of select="@displayLabel"/>
+				</xsl:if>
+			</td>
+			<td>
+				<xsl:for-each select="mods:topic">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A%2522'"/>
+							<xsl:value-of select="."/>
+							<xsl:value-of select="'%2522'"/>
+						</xsl:attribute>
+						<xsl:value-of select="."/>
+					</a>
+					<br />
+				</xsl:for-each>
+				<xsl:for-each select="following-sibling::mods:subject[mods:topic]">
+					<xsl:for-each select="mods:topic">
+						<a>
+							<xsl:attribute name="href">
+								<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A%2522'"/>
+								<xsl:value-of select="."/>
+								<xsl:value-of select="'%2522'"/>
+							</xsl:attribute>
+							<xsl:value-of select="."/>
+						</a>
+						</xsl:for-each>
+					<br />
+				</xsl:for-each>
+			</td>
+		</tr>
+	</xsl:template>
+	<xsl:template match="mods:subject[mods:geographic][1]">
+		<tr>
+			<td>
+				<xsl:if test="normalize-space(mods:geographic)">
+					<xsl:choose>
+						<xsl:when test="not(@displayLabel)">
+							<xsl:value-of select="$subjectGeographic"/>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:value-of select="@displayLabel"/>
+				</xsl:if>
+			</td>
+			<td>
+				<xsl:for-each select="mods:geographic">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A%2522'"/>
+							<xsl:value-of select="."/>
+							<xsl:value-of select="'%2522'"/>
+						</xsl:attribute>
+						<xsl:value-of select="."/>
+					</a>
+					<br />
+				</xsl:for-each>
+				<xsl:for-each select="following-sibling::mods:subject[mods:geographic]">
+					<xsl:for-each select="mods:geographic">
+						<a>
+							<xsl:attribute name="href">
+								<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A%2522'"/>
+								<xsl:value-of select="."/>
+								<xsl:value-of select="'%2522'"/>
+							</xsl:attribute>
+							<xsl:value-of select="."/>
+						</a>
+					</xsl:for-each>
+					<br />
+				</xsl:for-each>
+			</td>
+		</tr>
+	</xsl:template>
+	<xsl:template match="mods:subject[mods:occupation | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] ">
 <!-- 	<xsl:template match="mods:subject[mods:topic | mods:name | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] "> -->
-	  <xsl:if test="normalize-space(mods:topic)">
-	    <tr><td>
-		<xsl:choose><xsl:when test="not(@displayLabel)">
-                                <xsl:value-of select="$subjectTopic"/>
-                </xsl:when></xsl:choose>
-		<xsl:value-of select="@displayLabel"/>
-	    </td><td>
-	<!--try new one here for together subject terms
-	<xsl:for-each select="mods:topic">	
-		<xsl:value-of select="."/>
-	</xsl:for-each>
-	-->
-		
-		<xsl:for-each select="mods:topic">
-		<a>
-                    	<xsl:attribute name="href">
-                    		<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A%2522'"/>
-				<xsl:value-of select="."/>
-				<xsl:value-of select="'%2522'"/>
-                    	</xsl:attribute>
-				<xsl:value-of select="."/>
-		</a>
-		</xsl:for-each>
-	      </td>  </tr>
-	  </xsl:if>			
+	
 	  <xsl:if test="normalize-space(mods:occupation)">
 	    <xsl:for-each select="mods:occupation">
 	      <tr><td><xsl:value-of select="$subjectOccupation"/></td><td>
