@@ -160,8 +160,26 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</td></tr>
  	<!-- </dc:title> -->
 	</xsl:template>
-
-	<xsl:template match="mods:name">
+	<xsl:template match="mods:name[@displayLabel='Contributor'][1]">
+		<tr>
+			<td>
+				Contributor
+			</td>
+			<td>
+				<xsl:for-each select="mods:namePart">
+					<xsl:value-of select="."/>
+					<br />
+				</xsl:for-each>
+				<xsl:for-each select="following-sibling::mods:name[mods:namePart]">
+					<xsl:for-each select="mods:namePart">
+						<xsl:value-of select="."/>
+					</xsl:for-each>
+					<br />
+				</xsl:for-each>
+			</td>
+		</tr>
+	</xsl:template>
+	<xsl:template match="mods:name[not(@displayLabel='Contributor')]">
 		<tr><td><xsl:choose><xsl:when test="not(@displayLabel)">
                                 <xsl:value-of select="$name"/>
                         </xsl:when></xsl:choose>
@@ -282,14 +300,6 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	    <xsl:for-each select="mods:name">
 	      <tr><td><xsl:value-of select="$subjectName"/></td><td>
 		  <xsl:call-template name="name"/>
-	      </td></tr>
-	    </xsl:for-each>
-	  </xsl:if>
-	
-	  <xsl:if test="normalize-space(mods:geographic)">
-	    <xsl:for-each select="mods:geographic">
-	      <tr><td><xsl:value-of select="$subjectGeographic"/></td><td>
-		  <xsl:value-of select="."/>
 	      </td></tr>
 	    </xsl:for-each>
 	  </xsl:if>
