@@ -260,7 +260,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				<xsl:for-each select="mods:geographic">
 					<a>
 						<xsl:attribute name="href">
-							<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A%2522'"/>
+							<xsl:value-of select="'/islandora/search/mods_subject_geographic_ms%3A%2522'"/>
 							<xsl:value-of select="."/>
 							<xsl:value-of select="'%2522'"/>
 						</xsl:attribute>
