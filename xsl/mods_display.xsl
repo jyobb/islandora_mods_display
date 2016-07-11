@@ -284,7 +284,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 					<xsl:for-each select="mods:geographic">
 						<a>
 							<xsl:attribute name="href">
-								<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A%2522'"/>
+								<xsl:value-of select="'/islandora/search/mods_subject_geographic_ms%3A%2522'"/>
 								<xsl:value-of select="."/>
 								<xsl:value-of select="'%2522'"/>
 							</xsl:attribute>
@@ -296,7 +296,47 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</td>
 		</tr>
 	</xsl:template>
-	<xsl:template match="mods:subject[mods:occupation | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] ">
+	<xsl:template match="mods:subject[mods:temporal][1]">
+		<tr>
+			<td>
+				<xsl:if test="normalize-space(mods:temporal)">
+					<xsl:choose>
+						<xsl:when test="not(@displayLabel)">
+							<xsl:value-of select="$subjectTemporal"/>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:value-of select="@displayLabel"/>
+				</xsl:if>
+			</td>
+			<td>
+				<xsl:for-each select="mods:temporal">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="'/islandora/search/mods_subject_temporal_ms%3A%2522'"/>
+							<xsl:value-of select="."/>
+							<xsl:value-of select="'%2522'"/>
+						</xsl:attribute>
+						<xsl:value-of select="."/>
+					</a>
+					<br />
+				</xsl:for-each>
+				<xsl:for-each select="following-sibling::mods:subject[mods:temporal]">
+					<xsl:for-each select="mods:temporal">
+						<a>
+							<xsl:attribute name="href">
+								<xsl:value-of select="'/islandora/search/mods_subject_temporal_ms%3A%2522'"/>
+								<xsl:value-of select="."/>
+								<xsl:value-of select="'%2522'"/>
+							</xsl:attribute>
+							<xsl:value-of select="."/>
+						</a>
+					</xsl:for-each>
+					<br />
+				</xsl:for-each>
+			</td>
+		</tr>
+	</xsl:template>
+	<xsl:template match="mods:subject[mods:occupation | mods:hierarchicalGeographic | mods:cartographics ] ">
 <!-- 	<xsl:template match="mods:subject[mods:topic | mods:name | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] "> -->
 	
 	  <xsl:if test="normalize-space(mods:occupation)">
