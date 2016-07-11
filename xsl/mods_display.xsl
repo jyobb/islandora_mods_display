@@ -217,28 +217,40 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				</xsl:if>
 			</td>
 			<td>
-				<xsl:for-each select="mods:topic">
+				<a>
+					<xsl:attribute name="href">
+						<xsl:for-each select="mods:topic">
+							<xsl:if test="position()=1">
+								<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A'"/>
+							</xsl:if>
+							<xsl:text>%2522</xsl:text>
+							<xsl:value-of select="."/>
+							<xsl:text>%2522</xsl:text>
+						</xsl:for-each>
+					</xsl:attribute>
+					<xsl:for-each select="mods:topic">
+						<xsl:value-of select="."/>
+						<xsl:if test="position()!=last()">--</xsl:if>
+					</xsl:for-each>
+				</a>
+				<br />
+				<xsl:for-each select="following-sibling::mods:subject[mods:topic]">
 					<a>
 						<xsl:attribute name="href">
-							<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A%2522'"/>
-							<xsl:value-of select="."/>
-							<xsl:value-of select="'%2522'"/>
-						</xsl:attribute>
-						<xsl:value-of select="."/>
-					</a>
-					<br />
-				</xsl:for-each>
-				<xsl:for-each select="following-sibling::mods:subject[mods:topic]">
-					<xsl:for-each select="mods:topic">
-						<a>
-							<xsl:attribute name="href">
-								<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A%2522'"/>
+							<xsl:for-each select="mods:topic">
+								<xsl:if test="position()=1">
+								<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A'"/>
+								</xsl:if>
+								<xsl:text>%2522</xsl:text>
 								<xsl:value-of select="."/>
-								<xsl:value-of select="'%2522'"/>
-							</xsl:attribute>
+								<xsl:text>%2522</xsl:text>
+							</xsl:for-each>
+						</xsl:attribute>
+						<xsl:for-each select="mods:topic">
 							<xsl:value-of select="."/>
-						</a>
+							<xsl:if test="position()!=last()">--</xsl:if>
 						</xsl:for-each>
+					</a>
 					<br />
 				</xsl:for-each>
 			</td>
