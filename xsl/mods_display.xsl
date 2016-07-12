@@ -42,7 +42,9 @@
     Start and end dates are presented as span dates in dc:date and in dc:coverage
     When the first subelement in a subject wrapper is topic, subject subelements are strung together in dc:subject with hyphens separating them
     Some subject subelements, i.e., geographic, temporal, hierarchicalGeographic, and cartographics, are also parsed into dc:coverage
-    The subject subelement geographicCode is dropped in the transform
+    The subject subelement geographicCode is dropped in the transform.
+
+    Note:  The logic "*[@displayLabel]" is suspect and probably should be just "@displayLabel" in most cases!
 
     -->
 
@@ -591,7 +593,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
+          <xsl:when test="@displayLabel">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
@@ -610,7 +612,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
+          <xsl:when test="@displayLabel">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
@@ -672,7 +674,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -689,7 +691,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -706,7 +708,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -723,7 +725,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -744,7 +746,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -762,7 +764,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -780,7 +782,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -798,7 +800,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -817,7 +819,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -836,7 +838,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -857,7 +859,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
+          <xsl:when test="@displayLabel">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
@@ -876,7 +878,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
+          <xsl:when test="@displayLabel">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
