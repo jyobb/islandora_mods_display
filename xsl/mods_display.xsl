@@ -15,7 +15,7 @@
      since normalize-space( ) returns a string and not a boolean.
 
     Adding @displayLabel logic like the following on 24-Nov-2015...
-
+    
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
@@ -42,9 +42,7 @@
     Start and end dates are presented as span dates in dc:date and in dc:coverage
     When the first subelement in a subject wrapper is topic, subject subelements are strung together in dc:subject with hyphens separating them
     Some subject subelements, i.e., geographic, temporal, hierarchicalGeographic, and cartographics, are also parsed into dc:coverage
-    The subject subelement geographicCode is dropped in the transform.
-
-    Note:  The logic "*[@displayLabel]" is suspect and probably should be just "@displayLabel" in most cases!
+    The subject subelement geographicCode is dropped in the transform
 
     -->
 
@@ -115,44 +113,47 @@
   <!-- Now for all the detail templates -->
   <!-- MM Changed 05-Nov-2015... Adding class='mods-metadata-label' to all labels. -->
 
-  <!-- Name with @type -->
-  <xsl:template match="mods:name[@type][mods:role/mods:roleTerm]">
-    <tr class="do-not-hide">
-      <td class="mods-metadata-label">
-        <xsl:choose>
-          <xsl:when test="self::node()[@displayLabel]">
-            <xsl:value-of select="self::node()/@displayLabel"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="mods:role/mods:roleTerm"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </td>
-      <td>
-        <xsl:value-of select="mods:namePart[not(@type)]"/>
-      </td>
-    </tr>
+  <!-- Name with or without attribute -->
+  <xsl:template match="mods:name">
+    <xsl:for-each select="self::node()/mods:namePart">
+      <tr class="do-not-hide">
+        <td class="mods-metadata-label">
+          <xsl:choose>
+            <xsl:when test="../mods:role/mods:roleTerm[@displayLabel]">
+              <xsl:value-of select="../mods:role/mods:roleTerm[@displayLabel]"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="../mods:role/mods:roleTerm"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </td>
+        <td>
+          <xsl:value-of select="."/>
+        </td>
+      </tr>
+    </xsl:for-each>
   </xsl:template>
 
-  <!-- Name with NO attribute -->
-  <xsl:template match="mods:name[not(@*)][mods:role/mods:roleTerm]">
-    <tr class="do-not-hide">
-      <td class="mods-metadata-label">
-        <xsl:choose>
-          <xsl:when test="self::node()[@displayLabel]">
-            <xsl:value-of select="self::node()/@displayLabel"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="mods:role/mods:roleTerm"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </td>
-      <td>
-        <xsl:value-of select="mods:namePart[not(@type)]"/>
-      </td>
-    </tr>
-  </xsl:template>
-
+  <!-- Name with NO @type attribute
+  <xsl:template match="mods:name[not(@type)]">
+    <xsl:for-each select="self::node()/mods:namePart">
+      <tr class="do-not-hide">
+        <td class="mods-metadata-label">
+          <xsl:choose>
+            <xsl:when test="../mods:role/mods:roleTerm[@displayLabel]">
+              <xsl:value-of select="../mods:role/mods:roleTerm[@displayLabel]"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="../mods:role/mods:roleTerm"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </td>
+        <td>
+          <xsl:value-of select="."/>
+        </td>
+      </tr>
+    </xsl:for-each>
+  </xsl:template> -->
 
   <!-- Original construct for creator/contributor names
     <xsl:template match="mods:name">
@@ -593,7 +594,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="@displayLabel">
+          <xsl:when test="*[@displayLabel]">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
@@ -674,7 +675,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="@displayLabel">
+            <xsl:when test="*[@displayLabel]">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -691,7 +692,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="@displayLabel">
+            <xsl:when test="*[@displayLabel]">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -708,7 +709,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="@displayLabel">
+            <xsl:when test="*[@displayLabel]">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -725,7 +726,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="@displayLabel">
+            <xsl:when test="*[@displayLabel]">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -746,7 +747,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="@displayLabel">
+            <xsl:when test="*[@displayLabel]">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -764,7 +765,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="@displayLabel">
+            <xsl:when test="*[@displayLabel]">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -782,7 +783,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="@displayLabel">
+            <xsl:when test="*[@displayLabel]">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -800,7 +801,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="@displayLabel">
+            <xsl:when test="*[@displayLabel]">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -819,7 +820,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="@displayLabel">
+            <xsl:when test="*[@displayLabel]">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -838,7 +839,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="@displayLabel">
+            <xsl:when test="*[@displayLabel]">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -859,7 +860,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="@displayLabel">
+          <xsl:when test="*[@displayLabel]">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
@@ -878,7 +879,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="@displayLabel">
+          <xsl:when test="*[@displayLabel]">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
