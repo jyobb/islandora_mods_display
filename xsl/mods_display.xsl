@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="mods dc xsi oai_dc srw_dc"
-  xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema"
-  xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="mods xsi"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <!--
     This stylesheet modified by M. McFate, Grinnell College, from 24-Feb-2015 to ?????????? for use
@@ -17,7 +15,7 @@
      since normalize-space( ) returns a string and not a boolean.
 
     Adding @displayLabel logic like the following on 24-Nov-2015...
-
+    
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
@@ -66,7 +64,7 @@
   <xsl:variable name="abstract">Description</xsl:variable>
   <xsl:variable name="toc">Table of Contents</xsl:variable>
   <xsl:variable name="note">Note</xsl:variable>
-  <xsl:variable name="dateIssued">Date Issued</xsl:variable>ƒ
+  <xsl:variable name="dateIssued">Date Issued</xsl:variable>
   <xsl:variable name="dateCreated">Date Created</xsl:variable>
   <xsl:variable name="dateCaptured">Date Captured</xsl:variable>
   <xsl:variable name="dateOther">Date (Other)</xsl:variable>
@@ -115,24 +113,47 @@
   <!-- Now for all the detail templates -->
   <!-- MM Changed 05-Nov-2015... Adding class='mods-metadata-label' to all labels. -->
 
-  <!-- Name Info -->
-  <xsl:template match="mods:name[@type][mods:role/mods:roleTerm]">
-    <tr class="do-not-hide">
-      <td class="mods-metadata-label">
-        <xsl:choose>
-          <xsl:when test="self::node()[@displayLabel]">
-            <xsl:value-of select="self::node()/@displayLabel"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="mods:role/mods:roleTerm"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </td>
-      <td>
-        <xsl:value-of select="mods:namePart[not(@type)]"/>
-      </td>
-    </tr>
+  <!-- Name with or without attribute -->
+  <xsl:template match="mods:name">
+    <xsl:for-each select="self::node()/mods:namePart">
+      <tr class="do-not-hide">
+        <td class="mods-metadata-label">
+          <xsl:choose>
+            <xsl:when test="../mods:role/mods:roleTerm[@displayLabel]">
+              <xsl:value-of select="../mods:role/mods:roleTerm[@displayLabel]"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="../mods:role/mods:roleTerm"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </td>
+        <td>
+          <xsl:value-of select="."/>
+        </td>
+      </tr>
+    </xsl:for-each>
   </xsl:template>
+
+  <!-- Name with NO @type attribute
+  <xsl:template match="mods:name[not(@type)]">
+    <xsl:for-each select="self::node()/mods:namePart">
+      <tr class="do-not-hide">
+        <td class="mods-metadata-label">
+          <xsl:choose>
+            <xsl:when test="../mods:role/mods:roleTerm[@displayLabel]">
+              <xsl:value-of select="../mods:role/mods:roleTerm[@displayLabel]"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="../mods:role/mods:roleTerm"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </td>
+        <td>
+          <xsl:value-of select="."/>
+        </td>
+      </tr>
+    </xsl:for-each>
+  </xsl:template> -->
 
   <!-- Original construct for creator/contributor names
     <xsl:template match="mods:name">
@@ -146,7 +167,7 @@
     <tr class="do-not-hide">
       <td style="width:16em;" class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
+          <xsl:when test="@displayLabel">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
@@ -178,21 +199,23 @@
 
   <!-- MAM addition for Alternative Title -->
   <xsl:template match="mods:titleInfo[@type='alternative']">
-    <tr>
-      <td class="mods-metadata-label">
-        <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
-            <xsl:value-of select="@displayLabel"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="$altTitle"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </td>
-      <td>
-        <xsl:value-of select="normalize-space(mods:title)"/>
-      </td>
-    </tr>
+    <xsl:for-each select="mods:title">
+      <tr>
+        <td class="mods-metadata-label">
+          <xsl:choose>
+            <xsl:when test="@displayLabel">
+              <xsl:value-of select="@displayLabel"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$altTitle"/>
+            </xsl:otherwise>
+          </xsl:choose>
+          <td>
+            <xsl:value-of select="normalize-space(.)"/>
+          </td>
+        </td>
+      </tr>
+    </xsl:for-each>
   </xsl:template>
 
   <!-- Classification -->
@@ -200,7 +223,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
+          <xsl:when test="@displayLabel">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
@@ -218,7 +241,7 @@
 
   <!-- Subjects with NO @authority attribute and with a specific child -->
   <xsl:template
-    match="mods:subject[mods:topic|mods:occupation|mods:geographic|mods:hierarchicalGeographic|mods:cartographics|mods:temporal] ">
+      match="mods:subject[mods:topic|mods:occupation|mods:geographic|mods:hierarchicalGeographic|mods:cartographics|mods:temporal] ">
 
     <!-- MAM...show displayLabel attribute as the label but only if it exists! -->
     <xsl:if test="mods:topic[@displayLabel]">
@@ -252,7 +275,7 @@
         <tr>
           <td class="mods-metadata-label">
             <xsl:choose>
-              <xsl:when test="*[@displayLabel]">
+              <xsl:when test="@displayLabel">
                 <xsl:value-of select="@displayLabel"/>
               </xsl:when>
               <xsl:otherwise>
@@ -282,7 +305,7 @@
         <tr>
           <td class="mods-metadata-label">
             <xsl:choose>
-              <xsl:when test="*[@displayLabel]">
+              <xsl:when test="@displayLabel">
                 <xsl:value-of select="@displayLabel"/>
               </xsl:when>
               <xsl:otherwise>
@@ -302,7 +325,7 @@
         <tr>
           <td class="mods-metadata-label">
             <xsl:choose>
-              <xsl:when test="*[@displayLabel]">
+              <xsl:when test="@displayLabel">
                 <xsl:value-of select="@displayLabel"/>
               </xsl:when>
               <xsl:otherwise>
@@ -312,9 +335,9 @@
           </td>
           <td>
             <xsl:for-each
-              select="mods:continent|mods:country|mods:province|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area">
+                select="mods:continent|mods:country|mods:province|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area">
               <xsl:value-of select="normalize-space(.)"/>
-              <xsl:if test="position()!=last()">--</xsl:if>
+              <!-- <xsl:if test="position()!=last()">-</xsl:if> -->
             </xsl:for-each>
           </td>
         </tr>
@@ -326,7 +349,7 @@
         <tr>
           <td class="mods-metadata-label">
             <xsl:choose>
-              <xsl:when test="*[@displayLabel]">
+              <xsl:when test="@displayLabel">
                 <xsl:value-of select="@displayLabel"/>
               </xsl:when>
               <xsl:otherwise>
@@ -346,7 +369,7 @@
         <tr>
           <td class="mods-metadata-label">
             <xsl:choose>
-              <xsl:when test="*[@displayLabel]">
+              <xsl:when test="@displayLabel">
                 <xsl:value-of select="@displayLabel"/>
               </xsl:when>
               <xsl:otherwise>
@@ -368,7 +391,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -378,9 +401,10 @@
         </td>
         <td>
           <xsl:for-each
-            select="*[local-name()!='cartographics' and local-name()!='geographicCode' and local-name()!='hierarchicalGeographic'] ">
+              select="*[local-name()!='cartographics' and local-name()!='geographicCode' and local-name()!='hierarchicalGeographic'] ">
             <xsl:value-of select="."/>
-            <xsl:if test="position()!=last()">--</xsl:if>
+            <!-- MAM removed 06-July-2016
+            <xsl:if test="position()!=last()">-</xsl:if>  -->
           </xsl:for-each>
         </td>
       </tr>
@@ -390,14 +414,14 @@
 
   <!-- Subjects WITH @authority attribute and with a specific child -->
   <xsl:template
-    match="mods:subject[@authority='lcsh'][mods:topic | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] ">
+      match="mods:subject[@authority='lcsh'][mods:topic | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] ">
 
     <xsl:if test="mods:topic">
       <xsl:for-each select="mods:topic">
         <tr>
           <td class="mods-metadata-label">
             <xsl:choose>
-              <xsl:when test="*[@displayLabel]">
+              <xsl:when test="@displayLabel">
                 <xsl:value-of select="@displayLabel"/>
               </xsl:when>
               <xsl:otherwise>
@@ -407,7 +431,7 @@
           </td>
           <td>
             <xsl:value-of select="normalize-space(.)"/>
-            <xsl:if test="position()!=last()">--</xsl:if>
+            <!--  <xsl:if test="position()!=last()">-</xsl:if> -->
           </td>
         </tr>
       </xsl:for-each>
@@ -418,7 +442,7 @@
         <tr>
           <td class="mods-metadata-label">
             <xsl:choose>
-              <xsl:when test="*[@displayLabel]">
+              <xsl:when test="@displayLabel">
                 <xsl:value-of select="@displayLabel"/>
               </xsl:when>
               <xsl:otherwise>
@@ -428,7 +452,7 @@
           </td>
           <td>
             <xsl:value-of select="normalize-space(.)"/>
-            <xsl:if test="position()!=last()">--</xsl:if>
+            <!-- <xsl:if test="position()!=last()">-</xsl:if> -->
           </td>
         </tr>
       </xsl:for-each>
@@ -449,7 +473,7 @@
         <tr>
           <td class="mods-metadata-label">
             <xsl:choose>
-              <xsl:when test="*[@displayLabel]">
+              <xsl:when test="@displayLabel">
                 <xsl:value-of select="@displayLabel"/>
               </xsl:when>
               <xsl:otherwise>
@@ -469,7 +493,7 @@
         <tr>
           <td class="mods-metadata-label">
             <xsl:choose>
-              <xsl:when test="*[@displayLabel]">
+              <xsl:when test="@displayLabel">
                 <xsl:value-of select="@displayLabel"/>
               </xsl:when>
               <xsl:otherwise>
@@ -479,9 +503,9 @@
           </td>
           <td>
             <xsl:for-each
-              select="mods:continent|mods:country|mods:province|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area">
+                select="mods:continent|mods:country|mods:province|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area">
               <xsl:value-of select="normalize-space(.)"/>
-              <xsl:if test="position()!=last()">--</xsl:if>
+              <!-- <xsl:if test="position()!=last()">-</xsl:if> -->
             </xsl:for-each>
           </td>
         </tr>
@@ -493,7 +517,7 @@
         <tr>
           <td class="mods-metadata-label">
             <xsl:choose>
-              <xsl:when test="*[@displayLabel]">
+              <xsl:when test="@displayLabel">
                 <xsl:value-of select="@displayLabel"/>
               </xsl:when>
               <xsl:otherwise>
@@ -512,7 +536,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -523,7 +547,7 @@
         <td>
           <xsl:for-each select="mods:temporal">
             <xsl:value-of select="normalize-space(.)"/>
-            <xsl:if test="position()!=last()">-</xsl:if>
+            <!-- <xsl:if test="position()!=last()">-</xsl:if> -->
           </xsl:for-each>
         </td>
       </tr>
@@ -533,7 +557,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -543,9 +567,9 @@
         </td>
         <td>
           <xsl:for-each
-            select="*[local-name()!='cartographics' and local-name()!='geographicCode' and local-name()!='hierarchicalGeographic'] ">
+              select="*[local-name()!='cartographics' and local-name()!='geographicCode' and local-name()!='hierarchicalGeographic'] ">
             <xsl:value-of select="normalize-space(.)"/>
-            <xsl:if test="position()!=last()">--</xsl:if>
+            <!-- <xsl:if test="position()!=last()">-</xsl:if> -->
           </xsl:for-each>
         </td>
       </tr>
@@ -570,7 +594,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
+          <xsl:when test="@displayLabel">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
@@ -589,7 +613,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
+          <xsl:when test="@displayLabel">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
@@ -605,17 +629,17 @@
 
   <!-- Provenance or Acquisition or Provenance History -->
   <xsl:template
-    match="mods:note[@type='provenance' or @type='acquisition' or @type='provenance history']">
+      match="mods:note[@type='provenance' or @type='acquisition' or @type='provenance history']">
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-        <xsl:when test="@displayLabel">
-          <xsl:value-of select="@displayLabel"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$provenance"/>
-        </xsl:otherwise>
-      </xsl:choose>
+          <xsl:when test="@displayLabel">
+            <xsl:value-of select="@displayLabel"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$provenance"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </td>
       <td>
         <xsl:value-of select="normalize-space(.)"/>
@@ -625,7 +649,7 @@
 
   <!-- NOT Provenance nor Acquisition nor Provenance History -->
   <xsl:template
-    match="mods:note[@type!='provenance' and @type!='acquisition' and @type!='provenance history']">
+      match="mods:note[@type!='provenance' and @type!='acquisition' and @type!='provenance history']">
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
@@ -647,11 +671,11 @@
   <xsl:template match="mods:originInfo">
 
     <!-- MAM addition for discrete dates with NO @point attribute -->
-    <xsl:for-each select="mods:dateCreated[not(@*)]">
+    <xsl:for-each select="mods:dateCreated[not(@point)]">
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -664,11 +688,11 @@
         </td>
       </tr>
     </xsl:for-each>
-    <xsl:for-each select="mods:dateIssued[not(@*)]">
+    <xsl:for-each select="mods:dateIssued[not(@point)]">
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -681,11 +705,11 @@
         </td>
       </tr>
     </xsl:for-each>
-    <xsl:for-each select="mods:dateCaptured[not(@*)]">
+    <xsl:for-each select="mods:dateCaptured[not(@point)]">
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -698,11 +722,11 @@
         </td>
       </tr>
     </xsl:for-each>
-    <xsl:for-each select="mods:dateOther[not(@*)]">
+    <xsl:for-each select="mods:dateOther[not(@point)]">
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -723,7 +747,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -741,7 +765,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -759,7 +783,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -777,7 +801,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -796,7 +820,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -815,7 +839,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -836,7 +860,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
+          <xsl:when test="@displayLabel">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
@@ -855,7 +879,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
+          <xsl:when test="@displayLabel">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
@@ -871,7 +895,7 @@
 
   <!-- Physical description... extent, form, internetMediaType, digitalOrigin or note -->
   <xsl:template
-    match="mods:physicalDescription[mods:extent|mods:form|mods:internetMediaType|mods:digitalOrigin|mods:note]">
+      match="mods:physicalDescription[mods:extent|mods:form|mods:internetMediaType|mods:digitalOrigin|mods:note]">
     <xsl:for-each select="./*">
       <tr>
         <td class="mods-metadata-label">
@@ -901,7 +925,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
+          <xsl:when test="@displayLabel">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
@@ -920,7 +944,7 @@
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -934,12 +958,11 @@
       </tr>
     </xsl:for-each>
 
-    <!--
     <xsl:for-each select="mods:shelfLocator">
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -951,28 +974,13 @@
           <xsl:value-of select="normalize-space(.)"/>
         </td>
       </tr>
-    </xsl:for-each> -->
-
-    <!--
-    <xsl:if test="mods:shelfLocator">
-      <tr>
-        <td class="mods-metadata-label">
-          <xsl:value-of select="$shelfLocator"/>
-        </td>
-        <td>
-          <xsl:for-each select="mods:shelfLocator">
-            <xsl:value-of select="normalize-space(.)"/>
-            <xsl:if test="position()!=last()">-</xsl:if>
-          </xsl:for-each>
-        </td>
-      </tr>
-    </xsl:if> -->
+    </xsl:for-each>
 
     <xsl:for-each select="mods:url">
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
-            <xsl:when test="*[@displayLabel]">
+            <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel"/>
             </xsl:when>
             <xsl:otherwise>
@@ -1034,7 +1042,7 @@
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
-          <xsl:when test="*[@displayLabel]">
+          <xsl:when test="@displayLabel">
             <xsl:value-of select="@displayLabel"/>
           </xsl:when>
           <xsl:otherwise>
@@ -1049,10 +1057,10 @@
               <xsl:value-of select="normalize-space(.)"/>
             </xsl:when>
             <xsl:when test="@type='code'"/>
-       <!--   <xsl:text> [</xsl:text>                         MAM removed on 01-December-2015
-              <xsl:value-of select="normalize-space(.)"/>
-              <xsl:text>] </xsl:text>
-            </xsl:when> -->
+            <!--   <xsl:text> [</xsl:text>                         MAM removed on 01-December-2015
+                   <xsl:value-of select="normalize-space(.)"/>
+                   <xsl:text>] </xsl:text>
+                 </xsl:when> -->
           </xsl:choose>
         </xsl:for-each>
 
@@ -1062,30 +1070,30 @@
 
   <!-- Related Item ... suppress display of @type="constituent"! -->
   <xsl:template match="mods:relatedItem[not(@type='constituent')]">
-      <xsl:choose>
-        <!-- MM adding this to inhibit display of 'admin' (private) notes. 24-Feb-2015 -->
-        <xsl:when test="@type='admin'"/>
-        <xsl:otherwise>
-          <tr>
-            <td class="mods-metadata-label">
-              <xsl:choose>
-                <xsl:when test="*[@displayLabel]">
-                  <xsl:value-of select="@displayLabel"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:value-of select="$relatedItem"/>
-                </xsl:otherwise>
-              </xsl:choose>
-            </td>
-            <td>
-              <xsl:for-each select="mods:titleInfo|mods:identifier|mods:location|mods:note">
-                <xsl:value-of select="."/>
-                <xsl:if test="position()!=last()"> -- </xsl:if>
-              </xsl:for-each>
-            </td>
-          </tr>
-        </xsl:otherwise>
-      </xsl:choose>
+    <xsl:choose>
+      <!-- MM adding this to inhibit display of 'admin' (private) notes. 24-Feb-2015 -->
+      <xsl:when test="@type='admin'"/>
+      <xsl:otherwise>
+        <tr>
+          <td class="mods-metadata-label">
+            <xsl:choose>
+              <xsl:when test="@displayLabel">
+                <xsl:value-of select="@displayLabel"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$relatedItem"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </td>
+          <td>
+            <xsl:for-each select="mods:titleInfo/mods:title|mods:identifier|mods:location|mods:note">
+              <xsl:value-of select="."/>
+              <xsl:if test="position()!=last()"> -- </xsl:if>
+            </xsl:for-each>
+          </td>
+        </tr>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- Access Condition -->
