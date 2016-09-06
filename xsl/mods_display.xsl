@@ -65,7 +65,7 @@
   <xsl:variable name="toc">Table of Contents</xsl:variable>
   <xsl:variable name="note">Note</xsl:variable>
   <xsl:variable name="dateIssued">Date Issued</xsl:variable>
-  <xsl:variable name="dateCreated">Date Created</xsl:variable>
+  <xsl:variable name="dateCreated">Index Date</xsl:variable>         <!-- MAM replaced 'Date Created' on 06-Sept-2016 -->
   <xsl:variable name="dateCaptured">Date Captured</xsl:variable>
   <xsl:variable name="dateOther">Date (Other)</xsl:variable>
   <xsl:variable name="publisher">Publisher</xsl:variable>
