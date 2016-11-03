@@ -28,65 +28,29 @@ function islandora_mods_display_preprocess_islandora_mods_display_display(array 
   }
 
   if ($mods) {
+    $file = drupal_get_path('module', 'islandora_mods_display') . '/xsl/mods_display.xsl';
+    $xslt = new XSLTProcessor();
+    $xslt_dom = new DOMDocument();
+    if (!$xslt_dom->load($file)) {
+      drupal_set_message("Error loading ./xsl/mods_display.xsl transform in islandora_mods_display_preprocess_islandora_mods_display_display( )!", 'error');
+      return;
+    }
 
-    /* MAM...01-December-2015
-     $params and the foreach loops that use it are no longer necessary!
-
-    $params = array('title' => 'Titles',
-		  'name' => 'Name', 
-		  'classification' => 'Classification', 
-		  'subjectTopic' => 'Subject Topic',
-		  'subjectOccupation' => 'Subject Occupation',
-		  'subjectName' => 'Subject Name',
-		  'subjectGeographic' => 'Subject Geographic',
-		  'subjectHierGeographic' => 'Subject Hierarchical Geographic',
-		  'subjectCartographic' => 'Subject Cartographic',
-		  'subjectTemporal' => 'Subject Temporal',
-		  'subjectLocalname' => 'Subject Local Name',
-		  'abstract' => 'Abstract',
-		  'toc' => 'Table of Contents',
-		  'note' => 'Note',
-		  'dateIssued' => 'Date Issued',
-		  'dateCreated' => 'Date Created',
-		  'dateCaptured' => 'Date Captured',
-		  'dateOther' => 'Date Other',
-		  'publisher' => 'Publisher',
-		  'genre' => 'Genre',
-		  'typeOfResource' => 'Type of Resource',
-		  'extent' => 'Extent',
-		  'form' => 'Form',
-		  'mediaType' => 'Media Type',
-		  'mimeType' => 'Mime Type',
-		  'identifier' => 'Identifier',
-		  'physicalLocation' => 'Physical Location',
-		  'shelfLocation' => 'Shelf Location',
-		  'url' => 'URL',
-		  'holdingSubLocation' => 'Holding Sublocation',
-		  'holdingShelfLocator' => 'Holding Shelf Locator',
-		  'electronicLocator' => 'Electronic Locator',
-		  'language' => 'Language',
-		  'relatedItem' => 'Related Item',
-		  'accessCondition' => 'Access Condition'); */
-
-      $file = drupal_get_path('module', 'islandora_mods_display') . '/xsl/mods_display.xsl';
-      $xslt = new XSLTProcessor();
-      $xslt_dom = new DOMDocument();
-      $xslt_dom->load($file);
-      $input = new DOMDocument();
-      $did_load_ok = $input->loadXML($mods);
-      if ($did_load_ok) {
-      $xslt->importStylesheet($xslt_dom);
-
-      /* MAM..01-December-2015... the following foreach loop is no longer necessary.
-
-      foreach($params as $k => $v){
-        //debug for fun
-        //drupal_set_message($k);
-        $xslt->setParameter('',$k,$v);
-      } */
-
-      $variables['metadata'] = $xslt->transformToXml($input);
+    $input = new DOMDocument();
+    $did_load_ok = $input->loadXML($mods);
+    if ($did_load_ok) {
+      if (!$xslt->importStylesheet($xslt_dom)) {
+        drupal_set_message("Error loading XSLT as transform stylesheet in islandora_mods_display_preprocess_islandora_mods_display_display( )!", 'error');
+        return;
       }
+      if (!$variables['metadata'] = $xslt->transformToXml($input)) {
+        drupal_set_message("Error transforming MODS in islandora_mods_display_preprocess_islandora_mods_display_display( )!", 'error');
+        return;
+      }
+    } else {
+      drupal_set_message("Error loading MODS content as XML in islandora_mods_display_preprocess_islandora_mods_display_display( )!", 'error');
+      return;
+    }
   }
 
   // MAM additions to include parent object metadata when looking at an object
@@ -99,7 +63,6 @@ function islandora_mods_display_preprocess_islandora_mods_display_display(array 
       if ($parent = islandora_object_load($parentID)) {
         if (in_array('islandora:compoundCModel', $parent->models)) {
           $mods = $parent['MODS']->content;
-//        $file = drupal_get_path('module', 'islandora_mods_display') . '/xsl/mods_display_compound_parent.xsl';   // MAM...no longer needed after 12-Nov-2015
           $file = drupal_get_path('module', 'islandora_mods_display') . '/xsl/mods_display.xsl';
           $xslt = new XSLTProcessor();
           $xslt_dom = new DOMDocument();
@@ -108,13 +71,7 @@ function islandora_mods_display_preprocess_islandora_mods_display_display(array 
           $did_load_ok = $input->loadXML($mods);
           if ($did_load_ok) {
             $xslt->importStylesheet($xslt_dom);
-
-            /* MAM...01-December-2015...no longer needed.
-            foreach ($params as $k => $v) {
-              $xslt->setParameter('', $k, $v);
-            } */
             $variables['metadata'] .= $xslt->transformToXml($input);
-
             $variables['metadata'] = islandora_mods_display_remove_redundant_rows($variables['metadata']);
           }
         }
