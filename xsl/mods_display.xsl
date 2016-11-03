@@ -345,7 +345,7 @@
     </xsl:if>
 
     <xsl:if test="mods:cartographics">
-      <xsl:for-each select="mods:cartographics/*">
+      <xsl:for-each select="mods:cartographics">
         <tr>
           <td class="mods-metadata-label">
             <xsl:choose>
@@ -364,6 +364,27 @@
       </xsl:for-each>
     </xsl:if>
 
+    <xsl:if test="mods:temporal">
+      <xsl:for-each select="mods:temporal">
+        <tr>
+          <td class="mods-metadata-label">
+            <xsl:choose>
+              <xsl:when test="@displayLabel">
+                <xsl:value-of select="@displayLabel"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$subjectTemporal"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </td>
+          <td>
+            <xsl:value-of select="normalize-space(.)"/>
+          </td>
+        </tr>
+      </xsl:for-each>
+    </xsl:if>
+
+    <!--  The following is preserved as an example of what does NOT work well!
     <xsl:if test="mods:temporal">
       <xsl:if test="mods:temporal">
         <tr>
@@ -386,6 +407,7 @@
         </tr>
       </xsl:if>
     </xsl:if>
+    -->
 
     <xsl:if test="*[1][local-name()='topic'] and *[local-name()!='topic']">
       <tr>
@@ -513,7 +535,7 @@
     </xsl:if>
 
     <xsl:if test="mods:cartographics">
-      <xsl:for-each select="mods:cartographics/*">
+      <xsl:for-each select="mods:cartographics">
         <tr>
           <td class="mods-metadata-label">
             <xsl:choose>
@@ -533,6 +555,27 @@
     </xsl:if>
 
     <xsl:if test="mods:temporal">
+      <xsl:for-each select="mods:temporal">
+        <tr>
+          <td class="mods-metadata-label">
+            <xsl:choose>
+              <xsl:when test="@displayLabel">
+                <xsl:value-of select="@displayLabel"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$subjectTemporal"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </td>
+          <td>
+            <xsl:value-of select="normalize-space(.)"/>
+          </td>
+        </tr>
+      </xsl:for-each>
+    </xsl:if>
+
+    <!-- The following is preserved as an example of what does NOT work well.
+    <xsl:if test="mods:temporal">
       <tr>
         <td class="mods-metadata-label">
           <xsl:choose>
@@ -547,11 +590,12 @@
         <td>
           <xsl:for-each select="mods:temporal">
             <xsl:value-of select="normalize-space(.)"/>
-            <!-- <xsl:if test="position()!=last()">-</xsl:if> -->
+              <xsl:if test="position()!=last()">-</xsl:if>
           </xsl:for-each>
         </td>
       </tr>
     </xsl:if>
+    -->
 
     <xsl:if test="*[1][local-name()='topic'] and *[local-name()!='topic']">
       <tr>
