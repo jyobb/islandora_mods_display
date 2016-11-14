@@ -416,52 +416,56 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	<xsl:template match="mods:note">
 		<xsl:variable name="urlchar" select="'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-#:%_+.~?&amp;/='"/>
 		<xsl:variable name="noteUrl" select="substring-before(substring-after(., 'http'), substring(translate(substring-after(., 'http'), $urlchar, ''),1,1))"/>
-	  <xsl:if test="normalize-space(.)">
-	  	<tr><td>
-	  		<xsl:choose>
-	  			<xsl:when test="not(@displayLabel)">
-                   	<xsl:value-of select="$note"/>
-                </xsl:when>
-	  		</xsl:choose>
-	  		<xsl:value-of select="@displayLabel"/>
-	  	</td>
-	  	<td>
-	  		<xsl:choose>	
-	  			<xsl:when test="contains(., 'http')">
-	  				<xsl:value-of select="substring-before(., 'http')"/>
-	  					<a>
-				  			<xsl:attribute name="href">
-				  				<xsl:text>http</xsl:text>
-				  				<xsl:choose>
-				  					<xsl:when test="$noteUrl = ''">
-				  						<xsl:value-of select="substring-after(., 'http')"/>
-				  					</xsl:when>
-				  					<xsl:otherwise>
-				  						<xsl:value-of select="$noteUrl"/>
-				  					</xsl:otherwise>
-				  				</xsl:choose>
-				  			</xsl:attribute>
-	  						<xsl:text>http</xsl:text>
-	  						<xsl:choose>
-	  							<xsl:when test="$noteUrl = ''">
-	  								<xsl:value-of select="substring-after(., 'http')"/>
-	  								<xsl:text>option 1</xsl:text>
-	  								<xsl:value-of select="translate(substring-after(., 'http'), $urlchar, '')"/>
-	  								<xsl:text>option 1</xsl:text>
-	  							</xsl:when>
-	  							<xsl:otherwise>
-	  								<xsl:value-of select="$noteUrl"/>
-	  							</xsl:otherwise>
-	  						</xsl:choose>
-	  					</a>
-	  				<xsl:value-of select="substring-after(., $noteUrl)"/>
-	  			</xsl:when>
-	  			<xsl:otherwise>
-	  				<xsl:value-of select="."/>
-	  			</xsl:otherwise>
-	  		</xsl:choose>
-		  </td></tr>
-</xsl:if>
+		<xsl:if test="normalize-space(.)">
+			<tr><td>
+				<xsl:choose>
+					<xsl:when test="not(@displayLabel)">
+						<xsl:value-of select="$note"/>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:value-of select="@displayLabel"/>
+			</td>
+				<td>
+					<xsl:choose>	
+						<xsl:when test="contains(., 'http')">
+							<xsl:value-of select="substring-before(., 'http')"/>
+							<xsl:element name="a">
+								<xsl:attribute name="href">
+									<xsl:text>http</xsl:text>
+									<xsl:choose>
+										<xsl:when test="$noteUrl = ''">
+											<xsl:value-of select="substring-after(., 'http')"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="$noteUrl"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:attribute>
+								<xsl:text>http</xsl:text>				
+								<xsl:choose>
+									<xsl:when test="$noteUrl = ''">
+										<xsl:value-of select="substring-after(., 'http')"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$noteUrl"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:element>
+							<xsl:choose>
+								<xsl:when test="$noteUrl = ''">
+									<!--do nothing-->
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="substring-after(., $noteUrl)"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="."/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td></tr>
+		</xsl:if>
 	</xsl:template>
 
 	<!-- date stuff -->
