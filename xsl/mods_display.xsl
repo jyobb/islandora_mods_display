@@ -112,7 +112,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			 </xsl:when></xsl:choose>
 			 <xsl:value-of select="@displayLabel"/>
 			
-			</td><td>
+			</td><td class="modsTitle">
 
 <!--<xsl:if test="position()!=last()">-->
 
@@ -165,14 +165,28 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			<td>
 				Contributor
 			</td>
-			<td>
+			<td class="modsContributor">
 				<xsl:for-each select="mods:namePart">
-					<xsl:value-of select="."/>
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="'/islandora/search/mods_name_namePart_mt%3A%28'"/>
+							<xsl:value-of select="."/>
+							<xsl:value-of select="'%29'"/>
+						</xsl:attribute>
+						<xsl:value-of select="."/>
+					</a>
 					<br />
 				</xsl:for-each>
 				<xsl:for-each select="following-sibling::mods:name[mods:namePart]">
 					<xsl:for-each select="mods:namePart">
-						<xsl:value-of select="."/>
+						<a>
+							<xsl:attribute name="href">
+								<xsl:value-of select="'/islandora/search/mods_name_namePart_mt%3A%28'"/>
+								<xsl:value-of select="."/>
+								<xsl:value-of select="'%29'"/>
+							</xsl:attribute>
+							<xsl:value-of select="."/>
+						</a>
 					</xsl:for-each>
 					<br />
 				</xsl:for-each>
@@ -184,7 +198,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
                                 <xsl:value-of select="$name"/>
                         </xsl:when></xsl:choose>
 		     <xsl:value-of select="@displayLabel"/>
-		</td><td>
+		</td><td class="modsContributor">
 		<xsl:choose>
 			<xsl:when test="mods:role/mods:roleTerm[@type='text']='creator' or mods:role/mods:roleTerm[@type='code']='cre' ">
 					<xsl:call-template name="name"/>
