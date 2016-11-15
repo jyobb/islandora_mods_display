@@ -194,11 +194,50 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		</tr>
 	</xsl:template>
 	<xsl:template match="mods:name[not(@displayLabel='Contributor')]">
+		<xsl:variable name="nameType" select="@type"/>
 		<tr><td><xsl:choose><xsl:when test="not(@displayLabel)">
                                 <xsl:value-of select="$name"/>
                         </xsl:when></xsl:choose>
 		     <xsl:value-of select="@displayLabel"/>
 		</td><td class="modsContributor">
+			<xsl:for-each select="mods:namePart">
+				<a>
+					<xsl:attribute name="href">
+						<xsl:choose>
+							<xsl:when test="$nameType">
+								<xsl:value-of select="'/islandora/search/mods_name_'"/>
+								<xsl:value-of select="$nameType"/>
+								<xsl:text>_namePart_mlt%3A%2522</xsl:text>
+								<xsl:value-of select="."/>
+								<xsl:text>%2522</xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="'/islandora/search/mods_name_namePart_mt%3A%2522'"/>
+								<xsl:value-of select="."/>
+								<xsl:value-of select="'%2522'"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
+					<xsl:value-of select="."/>
+				</a>
+				<br />
+			</xsl:for-each>
+			<xsl:for-each select="following-sibling::mods:name[mods:namePart]">
+				<xsl:for-each select="mods:namePart">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="'/islandora/search/mods_name_namePart_mlt%3A'"/>
+							<xsl:text>%2522</xsl:text>
+							<xsl:value-of select="."/>
+							<xsl:text>%2522</xsl:text>
+						</xsl:attribute>
+						<xsl:value-of select="."/>
+					</a>
+				</xsl:for-each>
+				<br />
+			</xsl:for-each>
+			
+		<!--	
 		<xsl:choose>
 			<xsl:when test="mods:role/mods:roleTerm[@type='text']='creator' or mods:role/mods:roleTerm[@type='code']='cre' ">
 					<xsl:call-template name="name"/>
@@ -207,6 +246,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 					<xsl:call-template name="name"/>
 			</xsl:otherwise>
 		</xsl:choose>
+		-->
 		</td></tr>
 	</xsl:template>
 
