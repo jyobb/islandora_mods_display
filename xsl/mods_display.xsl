@@ -41,6 +41,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 
 	<xsl:output method="xml" indent="yes"/>
 	<xsl:strip-space elements="*"/>
+	<xsl:key name="namesByDisplayLabel" match="mods:name" use="@displayLabel"/>
 	<xsl:template match="/">
 	  <xsl:param name="title" />
 	  <xsl:param name="name" />
@@ -160,6 +161,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</td></tr>
  	<!-- </dc:title> -->
 	</xsl:template>
+	<!--
 	<xsl:template match="mods:name[@displayLabel='Contributor'][1]">
 		<tr>
 			<td>
@@ -193,51 +195,123 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</td>
 		</tr>
 	</xsl:template>
-	<xsl:template match="mods:name[not(@displayLabel='Contributor')]">
+	-->
+
+	<!--
+	<xsl:template match="mods:name[1]">
+		<xsl:for-each select="//mods:name[count(. | key('namesByDisplayLabel', @displayLabel)[1]) = 1]">
+			
+			<tr>
+				<td>
+					<xsl:value-of select="@displayLabel"/>
+				</td>
+				<td>
+					<xsl:for-each select="key('namesByDisplayLabel', @displayLabel)">
+						<xsl:value-of select="mods:namePart"/>
+					</xsl:for-each>
+				</td>
+			</tr>
+		</xsl:for-each>
+	</xsl:template>
+	-->
+	<!--
+	<xsl:template match="names">
 		<xsl:variable name="nameType" select="@type"/>
-		<tr><td><xsl:choose><xsl:when test="not(@displayLabel)">
-                                <xsl:value-of select="$name"/>
-                        </xsl:when></xsl:choose>
-		     <xsl:value-of select="@displayLabel"/>
-		</td><td class="modsContributor">
-			<xsl:for-each select="mods:namePart">
-				<a>
-					<xsl:attribute name="href">
-						<xsl:choose>
-							<xsl:when test="$nameType">
-								<xsl:value-of select="'/islandora/search/mods_name_'"/>
-								<xsl:value-of select="$nameType"/>
-								<xsl:text>_namePart_mlt%3A%2522</xsl:text>
-								<xsl:value-of select="."/>
-								<xsl:text>%2522</xsl:text>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="'/islandora/search/mods_name_namePart_mt%3A%2522'"/>
-								<xsl:value-of select="."/>
-								<xsl:value-of select="'%2522'"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:attribute>
-					<xsl:value-of select="."/>
-				</a>
-				<br />
-			</xsl:for-each>
-			<xsl:for-each select="following-sibling::mods:name[mods:namePart]">
-				<xsl:for-each select="mods:namePart">
-					<a>
-						<xsl:attribute name="href">
-							<xsl:value-of select="'/islandora/search/mods_name_namePart_mlt%3A'"/>
-							<xsl:text>%2522</xsl:text>
-							<xsl:value-of select="."/>
-							<xsl:text>%2522</xsl:text>
-						</xsl:attribute>
-						<xsl:value-of select="."/>
-					</a>
-				</xsl:for-each>
-				<br />
+
+			<xsl:apply-templates select="mods:name[generate-id(.)=generate-id(key('namesByDisplayLabel',@displayLabel)[1])]"/>
+		
+	</xsl:template>
+	<xsl:template match="mods:name">
+		<tr>
+			<xsl:for-each select="key('namesByDisplayLabel', @displayLabel)">
+				<td>
+					<xsl:value-of select="@displayLabel"/>
+				</td>
+				<td>
+					<xsl:value-of select="namePart"/>
+				</td>
 			</xsl:for-each>
 			
-		<!--	
+		</tr>
+	</xsl:template>
+	-->
+
+	<xsl:template match="mods:name[1]">
+		<xsl:for-each select="//mods:name[count(. | key('namesByDisplayLabel', @displayLabel)[1]) = 1]">
+		<xsl:variable name="nameType" select="@type"/>
+		<tr>
+			<td>
+				<xsl:choose>
+					<xsl:when test="not(@displayLabel)">
+                    	<xsl:value-of select="$name"/>
+                    </xsl:when></xsl:choose>
+		     <xsl:value-of select="@displayLabel"/>
+			</td>
+			<td class="modsContributor">
+				<xsl:choose>
+					<xsl:when test="not(@displayLabel)">
+						<xsl:for-each select="mods:namePart">
+							<a>
+								<xsl:attribute name="href">
+									<xsl:choose>
+										<xsl:when test="$nameType">
+											<xsl:value-of select="'/islandora/search/mods_name_'"/>
+											<xsl:value-of select="$nameType"/>
+											<xsl:text>_namePart_mt%3A%2522</xsl:text>
+											<xsl:value-of select="."/>
+											<xsl:text>%2522</xsl:text>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="'/islandora/search/mods_name_namePart_mt%3A%2522'"/>
+											<xsl:value-of select="."/>
+											<xsl:value-of select="'%2522'"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:attribute>
+								<xsl:value-of select="."/>
+							</a>
+							<br />
+						</xsl:for-each>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:for-each select="key('namesByDisplayLabel', @displayLabel)">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:choose>
+								<xsl:when test="$nameType">
+									<xsl:value-of select="'/islandora/search/mods_name_'"/>
+									<xsl:value-of select="$nameType"/>
+									<xsl:text>_namePart_mt%3A%2522</xsl:text>
+									<xsl:value-of select="mods:namePart"/>
+									<xsl:text>%2522</xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="'/islandora/search/mods_name_namePart_mt%3A%2522'"/>
+									<xsl:value-of select="mods:namePart"/>
+									<xsl:value-of select="'%2522'"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>
+						<xsl:value-of select="mods:namePart"/>
+					</a>
+					<br />
+				</xsl:for-each>
+				<!--
+				<xsl:for-each select="following-sibling::mods:name[mods:namePart]">
+					<xsl:for-each select="mods:namePart">
+						<a>
+							<xsl:attribute name="href">
+								<xsl:value-of select="'/islandora/search/mods_name_namePart_mt%3A'"/>
+								<xsl:text>%2522</xsl:text>
+								<xsl:value-of select="."/>
+								<xsl:text>%2522</xsl:text>
+							</xsl:attribute>
+							<xsl:value-of select="."/>
+						</a>
+					</xsl:for-each>
+					<br />
+				</xsl:for-each>-->
+	<!-- 		
 		<xsl:choose>
 			<xsl:when test="mods:role/mods:roleTerm[@type='text']='creator' or mods:role/mods:roleTerm[@type='code']='cre' ">
 					<xsl:call-template name="name"/>
@@ -246,10 +320,12 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 					<xsl:call-template name="name"/>
 			</xsl:otherwise>
 		</xsl:choose>
-		-->
-		</td></tr>
+-->
+			</td>
+		</tr>
+		</xsl:for-each>
 	</xsl:template>
-
+	
 	<xsl:template match="mods:classification">
 		<tr><td>
 		    <xsl:value-of select="$classification"/>
