@@ -758,12 +758,15 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		  </xsl:if>
 	</xsl:template>
 
-	<xsl:template match="mods:identifier">
-	  <xsl:if test="normalize-space(.)">
-	  <tr><td><xsl:value-of select="$identifier"/></td><td>
-	      <xsl:value-of select="."/>
-	  </td></tr>
-	  </xsl:if>
+<!--	<xsl:template match="mods:identifier">
+	  <tr>
+	  	<td>
+	  		<xsl:value-of select="$identifier"/>
+	  	</td>
+	  	<td>
+	      <xsl:value-of select="."/> Identify yourself
+	  	</td>
+	  </tr>-->
 	  <!--
 		<xsl:variable name="type" select="translate(@type,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
 		<xsl:choose>
@@ -779,21 +782,25 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</xsl:otherwise>
 		</xsl:choose>
 		-->
-	</xsl:template>
+	<!--</xsl:template>-->
 
 <!-- will's template for physloc -->
 	<xsl:template match="mods:location">
-	<xsl:for-each select="mods:physicalLocation">
-		<tr><td>
-		<xsl:choose><xsl:when test="not(@displayLabel)">
-                                <xsl:value-of select="$physicalLocation"/>
-                        </xsl:when></xsl:choose>
-                     <xsl:value-of select="@displayLabel"/>
-                </td><td><xsl:value-of select="."/></td></tr>
-	</xsl:for-each>
-
-<!-- <xsl:value-of select="physicalLocation/@displayLabel"/> -->
-
+		<xsl:for-each select="mods:physicalLocation[not(@displayLabel='OCLC Member Symbol')]">
+			<tr>
+				<td>
+				<xsl:choose>
+					<xsl:when test="not(@displayLabel)">
+	        	    	<xsl:value-of select="$physicalLocation"/>
+	            	</xsl:when>
+				</xsl:choose>
+	        	<xsl:value-of select="@displayLabel"/>
+	        	</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
+		</xsl:for-each>
 	</xsl:template>
 
 <!--
@@ -872,11 +879,15 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 </xsl:if>
 	</xsl:template>
 <!-- <start will's own loop>-->
-	<xsl:template match="mods:identifier">
-		
-			<tr><td><xsl:value-of select="@displayLabel"/></td><td>
+	<xsl:template match="mods:identifier[not(@displayLabel='Object File Name')]">
+		<tr>
+			<td>
+				<xsl:value-of select="@displayLabel"/>
+			</td>
+			<td>
 				<xsl:value-of select="."/>
-			</td></tr>
+			</td>
+		</tr>
 	</xsl:template>
 	<xsl:template match="mods:relatedItem[mods:titleInfo]">
 		<xsl:for-each select="mods:titleInfo">
