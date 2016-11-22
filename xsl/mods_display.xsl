@@ -879,8 +879,33 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</td></tr>
 	
 	</xsl:template>
-	<xsl:template match="mods:relatedItem[mods:titleInfo | mods:identifier | mods:location]">
-<!--	<xsl:template match="mods:relatedItem[mods:titleInfo | mods:name | mods:identifier | mods:location]"> -->
+	<xsl:template match="mods:relatedItem[mods:titleInfo]">
+		<xsl:for-each select="mods:titleInfo">
+		<tr>
+			<td>
+				<xsl:value-of select="@displayLabel"/>
+			</td>
+			<td>
+				<xsl:value-of select="mods:title"/>
+			</td>
+		</tr>
+		</xsl:for-each>
+	</xsl:template>
+	<xsl:template match="mods:relatedItem[mods:part]">
+		<xsl:for-each select="mods:part">
+			<tr>
+				<td>
+					<xsl:text>Part detail title</xsl:text>
+				</td>
+				<td>
+					<xsl:value-of select="mods:detail/mods:title"/>
+				</td>
+			</tr>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<!--<xsl:template match="mods:relatedItem[mods:titleInfo | mods:identifier | mods:location]">
+<!-\-	<xsl:template match="mods:relatedItem[mods:titleInfo | mods:name | mods:identifier | mods:location]"> -\->
 		<xsl:choose>
 			<xsl:when test="@type='original'">
 			  <tr><td><xsl:value-of select="mods:titleInfo/@displayLabel | identifier/@displayLabel  | mods:location/mods:url/@displayLabel"/></td><td>
@@ -888,25 +913,45 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 						select="mods:titleInfo/mods:title | mods:identifier | mods:location/mods:recommendedCitation">
 						<xsl:if test="normalize-space(.)!= ''">
 							<xsl:value-of select="."/>
-							<xsl:if test="position()!=last()">--</xsl:if>
+							<xsl:if test="position()!=last()">-\-</xsl:if>
 						</xsl:if>
 					</xsl:for-each>
 			  </td></tr>
 			</xsl:when>
+			<xsl:when test="mods:titleInfo/@type='alternative'">
+				<tr>
+					<td>
+						<xsl:value-of select="mods:titleInfo[@type='alternative']/@displayLabel | identifier/@displayLabel  | mods:location/mods:url/@displayLabel"/>
+					</td>
+					<td>
+						<xsl:for-each select="mods:titleInfo[@type='alternative']/mods:title | mods:identifier | mods:location/mods:recommendedCitation">
+							<xsl:if test="normalize-space(.)!= ''">
+								<xsl:value-of select="."/> and alternative
+								<xsl:if test="position()!=last()">-\-</xsl:if>
+							</xsl:if>
+						</xsl:for-each>
+					</td>
+				</tr>
+			</xsl:when>
 			<xsl:when test="@type='series'"/>
 			<xsl:otherwise>
-			  <tr><td><xsl:value-of select="mods:titleInfo/@displayLabel | mods:identifier/@displayLabel  | mods:location/mods:url/@displayLabel"/></td><td>
+			  <tr>
+			  	<td>
+			  		<xsl:value-of select="mods:titleInfo/@displayLabel | mods:identifier/@displayLabel  | mods:location/mods:url/@displayLabel"/>
+			  	</td>
+			  	<td>
 					<xsl:for-each
 						select="mods:titleInfo/mods:title | mods:identifier | mods:location/mods:recommendedCitation">
 						<xsl:if test="normalize-space(.)!= ''">
-							<xsl:value-of select="."/>
-							<xsl:if test="position()!=last()">--</xsl:if>
+							<xsl:value-of select="."/> and otherwise
+							<xsl:if test="position()!=last()">-\-</xsl:if>
 						</xsl:if>
 					</xsl:for-each>
-			  </td></tr>
+			  	</td>
+			  </tr>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+	</xsl:template>-->
 
 	<xsl:template match="mods:accessCondition">
 		<xsl:variable name="urlchar" select="'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-#:%_+.~?&amp;/='"/>
