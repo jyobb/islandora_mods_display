@@ -877,7 +877,6 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			<tr><td><xsl:value-of select="@displayLabel"/></td><td>
 				<xsl:value-of select="."/>
 			</td></tr>
-	
 	</xsl:template>
 	<xsl:template match="mods:relatedItem[mods:titleInfo]">
 		<xsl:for-each select="mods:titleInfo">
@@ -895,7 +894,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		<xsl:for-each select="mods:part">
 			<tr>
 				<td>
-					<xsl:text>Part detail title</xsl:text>
+					<xsl:text>Part of</xsl:text>
 				</td>
 				<td>
 					<xsl:value-of select="mods:detail/mods:title"/>
