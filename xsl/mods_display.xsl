@@ -241,7 +241,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				<xsl:if test="normalize-space(mods:topic)">
 					<xsl:choose>
 						<xsl:when test="not(@displayLabel)">
-							<xsl:value-of select="$subjectTopic"/>
+							<xsl:text>Subject</xsl:text>
 						</xsl:when>
 					</xsl:choose>
 					<xsl:value-of select="@displayLabel"/>
@@ -293,7 +293,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				<xsl:if test="normalize-space(mods:geographic)">
 					<xsl:choose>
 						<xsl:when test="not(@displayLabel)">
-							<xsl:value-of select="$subjectGeographic"/>
+							<xsl:text>Location</xsl:text>
 						</xsl:when>
 					</xsl:choose>
 					<xsl:value-of select="@displayLabel"/>
@@ -333,7 +333,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				<xsl:if test="normalize-space(mods:temporal)">
 					<xsl:choose>
 						<xsl:when test="not(@displayLabel)">
-							<xsl:value-of select="$subjectTemporal"/>
+							<xsl:text>Time Period</xsl:text>
 						</xsl:when>
 					</xsl:choose>
 					<xsl:value-of select="@displayLabel"/>
@@ -531,7 +531,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</xsl:if>
 	<xsl:if test="mods:dateCaptured">
 		<tr>
-			<td><xsl:value-of select="$dateCaptured"/></td>
+			<td><xsl:text>Date Digitized</xsl:text></td>
 			<td><xsl:value-of select="mods:dateCaptured"/>
 				<xsl:if test="mods:dateCaptured/@qualifier">
 					<xsl:text> (</xsl:text>
@@ -552,7 +552,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</xsl:if>
 	<xsl:if test="mods:dateIssued">
 		<tr>
-			<td><xsl:value-of select="$dateIssued"/></td>
+			<td><xsl:text>Date Created</xsl:text></td>
 			<td><xsl:value-of select="mods:dateIssued"/>
 				<xsl:if test="mods:dateIssued/@qualifier">
 					<xsl:text> (</xsl:text>
@@ -729,7 +729,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	<xsl:template match="mods:physicalDescription">
 		<xsl:if test="mods:extent">
 		  <xsl:if test="normalize-space(mods:extent)">
-			<tr><td><xsl:value-of select="$extent"/></td><td>
+			<tr><td><xsl:text>Size</xsl:text></td><td>
 				<xsl:value-of select="mods:extent"/>
 			</td></tr>
 		  </xsl:if>
