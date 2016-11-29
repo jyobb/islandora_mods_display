@@ -552,7 +552,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</xsl:if>
 	<xsl:if test="mods:dateIssued">
 		<tr>
-			<td><xsl:text>Date Created</xsl:text></td>
+			<td><xsl:text>Date Published</xsl:text></td>
 			<td><xsl:value-of select="mods:dateIssued"/>
 				<xsl:if test="mods:dateIssued/@qualifier">
 					<xsl:text> (</xsl:text>
