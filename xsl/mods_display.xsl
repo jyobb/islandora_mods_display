@@ -904,7 +904,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		</tr>
 	</xsl:template>
 	<xsl:template match="mods:relatedItem[mods:titleInfo]">
-		<xsl:for-each select="mods:titleInfo">
+		<xsl:for-each select="mods:titleInfo[@displayLabel='Digital Collection']">
 		<tr>
 			<td>
 				<xsl:value-of select="@displayLabel"/>
@@ -913,6 +913,46 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				<xsl:value-of select="mods:title"/>
 			</td>
 		</tr>
+		</xsl:for-each>
+		<xsl:for-each select="mods:titleInfo[@displayLabel='Series'][not(mods:partName)]">
+			<tr>
+				<td>
+					<xsl:value-of select="@displayLabel"/>
+				</td>
+				<td>
+					<xsl:value-of select="mods:title | mods:partNumber"/>
+				</td>
+			</tr>
+		</xsl:for-each>
+		<xsl:for-each select="mods:titleInfo[@displayLabel='Series'][mods:partName]">
+			<tr>
+				<td>
+					<xsl:text>Series Note</xsl:text>
+				</td>
+				<td>
+					<xsl:value-of select="mods:title | mods:partName"/>
+				</td>
+			</tr>
+		</xsl:for-each>
+		<xsl:for-each select="mods:titleInfo[@displayLabel='Subseries']">
+			<tr>
+				<td>
+					<xsl:value-of select="@displayLabel"/>
+				</td>
+				<td>
+					<xsl:value-of select="mods:title | mods:partNumber"/>
+				</td>
+			</tr>
+		</xsl:for-each>
+		<xsl:for-each select="mods:note[@displayLabel='Subseries Note']">
+			<tr>
+				<td>
+					<xsl:value-of select="@displayLabel"/>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
 		</xsl:for-each>
 	</xsl:template>
 	<xsl:template match="mods:relatedItem[mods:part]">
