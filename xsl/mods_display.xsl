@@ -801,82 +801,96 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				</td>
 			</tr>
 		</xsl:for-each>
-	</xsl:template>
 
-<!--
-	<xsl:template match="mods:location">
-	  <xsl:if test="normalize-space(mods:physicalLocation)">
-	    <tr><td><xsl:choose><xsl:when test="not(@displayLabel)">
-                                <xsl:value-of select="$physicalLocation"/>
-                        </xsl:when></xsl:choose>
-                        <xsl:value-of select="@displayLabel"/></td><td>
-		<xsl:for-each select="mods:physicalLocation">
-		  <xsl:value-of select="."/>
-		</xsl:for-each>
-	    </td></tr>
+	  <xsl:if test="normalize-space(mods:shelfLocator)">
+	  	<tr>
+	  		<td>
+	  			<xsl:text>Shelf Locator</xsl:text>
+	  		</td>
+	  		<td>
+	      		<xsl:for-each select="mods:shelfLocator">
+					<xsl:value-of select="."/>
+	      		</xsl:for-each>
+	  		</td>
+	  	</tr>
 	  </xsl:if>
-	  <xsl:if test="normalize-space(mods:shelfLocation)">
-	  <tr><td><xsl:value-of select="$shelfLocation"/></td><td>
-	      <xsl:for-each select="mods:shelfLocation">
-		<xsl:value-of select="."/>
-	      </xsl:for-each>
-	  </td></tr>
-	  </xsl:if>
--->
-	<!--  <xsl:if test="normalize-space(mods:url)">
+<!--  <xsl:if test="normalize-space(mods:url)">
 	    <tr><td><xsl:value-of select="$url"/></td><td>
 		<xsl:for-each select="mods:url">
 		  <xsl:value-of select="."/>
 		</xsl:for-each>
 	    </td></tr>
-	  </xsl:if> 
+	  </xsl:if> -->
 	  <xsl:if test="normalize-space(mods:recommendedCitation)">
-	    <tr><td><xsl:value-of select="$recommendedCitation"/></td><td>
-		<xsl:for-each select="mods:recommendedCitation">
-		  <xsl:value-of select="."/>
-		</xsl:for-each>
-	    </td></tr>
+	  	<tr>
+	  		<td>
+	  			<xsl:value-of select="$recommendedCitation"/>
+	  		</td>
+	  		<td>
+				<xsl:for-each select="mods:recommendedCitation">
+		  			<xsl:value-of select="."/>
+				</xsl:for-each>
+	    	</td>
+	  	</tr>
 	  </xsl:if>
-	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:sublocation)">
-		<tr><td><xsl:value-of select="$holdingSubLocation"/></td><td>
-		  <xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:sublocation">
-		    <xsl:value-of select="."/>
-		  </xsl:for-each>
-		  </td></tr>
+	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:subLocation)">
+		<tr>
+			<td>
+				<xsl:text>Sublocation</xsl:text>
+			</td>
+			<td>
+		  		<xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:subLocation">
+		    		<xsl:value-of select="."/>
+		  		</xsl:for-each>
+		  	</td>
+		</tr>
 	  </xsl:if>
-	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:shelfLocation)">
-		<tr><td><xsl:value-of select="$holdingShelfLocator"/></td><td>
-		  <xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:shelfLocator">
-		    <xsl:value-of select="."/>
-		  </xsl:for-each>
-		  </td></tr>
+	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:shelfLocator)">
+		<tr>
+			<td>
+				<xsl:text>Shelf Locator</xsl:text>
+			</td>
+			<td>
+		  		<xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:shelfLocator">
+		    		<xsl:value-of select="."/>
+		  		</xsl:for-each>
+		  	</td>
+		</tr>
 	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:electronicLocator)">
-		<tr><td><xsl:value-of select="$electronicLocator"/></td><td>
-			<xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:electronicLocator">
-				<xsl:value-of select="."/>
-			</xsl:for-each>
-		</td></tr>
+		<tr>
+			<td>
+				<xsl:value-of select="$electronicLocator"/>
+			</td>
+			<td>
+				<xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:electronicLocator">
+					<xsl:value-of select="."/>
+				</xsl:for-each>
+			</td>
+		</tr>
 	  </xsl:if>
 	</xsl:template>
--->
 
-<!--
-	<xsl:template match="mods:location/mods:holdingSimple/mods:copyInformation">
+<!--	<xsl:template match="mods:location/mods:holdingSimple/mods:copyInformation">
 	  <dc:identifier>
 	    <xsl:for-each select="mods:sublocation | mods:shelfLocator | mods:electronicLocator">
 	      <xsl:value-of select="."/>
 	      <xsl:if test="position()!=last()"></xsl:if>
 	    </xsl:for-each>
 	  </dc:identifier>
-	</xsl:template>
--->
+	</xsl:template>-->
+
 	<xsl:template match="mods:language">
-<xsl:if test="mods:language =''">
-	  <tr><td><xsl:value-of select="$language"/></td><td>
-	      <xsl:value-of select="normalize-space(.)"/>
-	</td></tr>
-</xsl:if>
+		<xsl:if test="mods:language =''">
+	  		<tr>
+	  			<td>
+	  				<xsl:value-of select="$language"/>
+	  			</td>
+	  			<td>
+	      			<xsl:value-of select="normalize-space(.)"/>
+				</td>
+	  		</tr>
+		</xsl:if>
 	</xsl:template>
 <!-- <start will's own loop>-->
 	<xsl:template match="mods:identifier[not(@displayLabel='Object File Name')]">
