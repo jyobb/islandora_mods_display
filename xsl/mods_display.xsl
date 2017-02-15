@@ -571,6 +571,16 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</td>
 		</tr>
 	</xsl:if>
+	<xsl:if test="mods:publisher">
+		<tr>
+			<td>
+				<xsl:text>Publisher</xsl:text>
+			</td>
+			<td>
+				<xsl:value-of select="mods:publisher"/>
+			</td>
+		</tr>
+	</xsl:if>
 </xsl:template>	
 	<!--
 <xsl:template match="mods:originInfo">
@@ -756,8 +766,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				<td>
 					<xsl:value-of select="mods:note[@type='medium']"/>
 				</td>
-			</tr>
-			
+			</tr>	
 		</xsl:if>
 	</xsl:template>
 
@@ -892,15 +901,25 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</xsl:template>-->
 
 	<xsl:template match="mods:language">
-		<xsl:if test="mods:language =''">
+		<xsl:if test="mods:languageTerm[@type='code']">
 	  		<tr>
 	  			<td>
-	  				<xsl:value-of select="$language"/>
+	  				<xsl:text>Language Code</xsl:text>
 	  			</td>
 	  			<td>
-	      			<xsl:value-of select="normalize-space(.)"/>
+	      			<xsl:value-of select="."/>
 				</td>
 	  		</tr>
+		</xsl:if>
+		<xsl:if test="mods:languageTerm[@type='text']">
+			<tr>
+				<td>
+					<xsl:text>Language</xsl:text>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
 		</xsl:if>
 	</xsl:template>
 <!-- <start will's own loop>-->
