@@ -30,7 +30,7 @@ When the first subelement in a subject wrapper is topic, subject subelements are
 Some subject subelements, i.e., geographic, temporal, hierarchicalGeographic, and cartographics, are also parsed into dc:coverage
 The subject subelement geographicCode is dropped in the transform
 
-	
+
 Revision 1.1	2007-05-18 <tmee@loc.gov>
 		Added modsCollection conversion to DC SRU
 		Updated introductory documentation
@@ -748,6 +748,17 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
                </td></tr>
 		  </xsl:if>
 	       </xsl:if>
+		<xsl:if test="mods:note[@type='medium']">
+			<tr>
+				<td>
+					<xsl:text>Original Format</xsl:text>
+				</td>
+				<td>
+					<xsl:value-of select="mods:note[@type='medium']"/>
+				</td>
+			</tr>
+			
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="mods:mimeType">
@@ -904,7 +915,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		</tr>
 	</xsl:template>
 	<xsl:template match="mods:relatedItem[mods:titleInfo]">
-		<xsl:for-each select="mods:titleInfo[@displayLabel='Digital Collection']">
+		<xsl:for-each select="mods:titleInfo[@displayLabel='Digital Collection'] | mods:titleInfo[@displayLabel='Repository Collection']">
 		<tr>
 			<td>
 				<xsl:value-of select="@displayLabel"/>
@@ -951,6 +962,21 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				</td>
 				<td>
 					<xsl:value-of select="."/>
+				</td>
+			</tr>
+		</xsl:for-each>
+		<xsl:for-each select="mods:location/mods:url[@displayLabel='Repository Collection Guide']">
+			<tr>
+				<td>
+					<xsl:value-of select="@displayLabel"/>
+				</td>
+				<td>
+					<xsl:element name="a">
+						<xsl:attribute name="href">
+							<xsl:value-of select="."/>
+						</xsl:attribute>
+						<xsl:value-of select="."/>
+					</xsl:element>
 				</td>
 			</tr>
 		</xsl:for-each>
