@@ -508,6 +508,16 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</xsl:template>
 -->
 <xsl:template match="mods:originInfo">
+	<xsl:if test="mods:edition">
+		<tr>
+			<td>
+				<xsl:text>Edition</xsl:text>
+			</td>
+			<td>
+				<xsl:value-of select="mods:edition"/>
+			</td>
+		</tr>
+	</xsl:if>
 	<xsl:if test="mods:dateCreated">
 		<tr>
 			<td><xsl:value-of select="$dateCreated"/></td>
