@@ -1030,6 +1030,25 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</tr>
 		</xsl:for-each>
 	</xsl:template>
+	<xsl:template match="mods:relatedItem[mods:physicalDescription]">
+		<xsl:for-each select="mods:physicalDescription">
+			<tr>
+				<td>
+					<xsl:choose>
+						<xsl:when test="mods:note/@type='medium'">
+							<xsl:text>Medium</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="mods:note/@type"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					</td>
+				<td>
+					<xsl:value-of select="mods:note"/>
+				</td>
+			</tr>
+		</xsl:for-each>
+	</xsl:template>
 	
 	<!--<xsl:template match="mods:relatedItem[mods:titleInfo | mods:identifier | mods:location]">
 <!-\-	<xsl:template match="mods:relatedItem[mods:titleInfo | mods:name | mods:identifier | mods:location]"> -\->
