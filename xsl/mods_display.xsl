@@ -388,9 +388,17 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:hierarchicalGeographic)">
 	  <xsl:for-each select="mods:hierarchicalGeographic">
-		  <tr><td><xsl:value-of select="$subjectHierGeographic"/></td><td>
+		  <tr><td>
+		  	<xsl:if test="normalize-space(mods:continent|mods:country|mods:provence|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area|mods:citySection)">
+		  		<xsl:choose>
+		  			<xsl:when test="not(../@displayLabel)"> <!-- tests for parent's displayLabel -->
+		  				<xsl:value-of select="$subjectHierGeographic"/>
+		  			</xsl:when>
+		  		</xsl:choose>
+		  		<xsl:value-of select="../@displayLabel"/>
+		  	</xsl:if></td><td>
 				<xsl:for-each
-					select="mods:continent|mods:country|mods:provence|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area">
+					select="mods:continent|mods:country|mods:provence|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area|mods:citySection">
 					<xsl:value-of select="."/>
 					<xsl:if test="position()!=last()">--</xsl:if>
 				</xsl:for-each>
