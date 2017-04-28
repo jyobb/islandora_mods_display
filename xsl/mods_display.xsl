@@ -1002,7 +1002,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				</td>
 			</tr>
 		</xsl:for-each>
-		<xsl:for-each select="mods:location/mods:url[@displayLabel='Repository Collection Guide']">
+		<xsl:for-each select="mods:location/mods:url[@displayLabel]">
 			<tr>
 				<td>
 					<xsl:value-of select="@displayLabel"/>
