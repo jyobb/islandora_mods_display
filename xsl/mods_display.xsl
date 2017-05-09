@@ -976,7 +976,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				</td>
 			</tr>
 		</xsl:for-each>
-		<xsl:for-each select="mods:physicalDescription">
+		<xsl:for-each select="mods:physicalDescription[mods:note]">
 			<tr>
 				<td>
 					<xsl:choose>
@@ -993,6 +993,16 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				</td>
 			</tr>
 		</xsl:for-each>
+		<xsl:for-each select="mods:physicalDescription[mods:extent]">
+			<tr>
+				<td>
+					<xsl:text>Extent</xsl:text>
+				</td>
+				<td>
+					<xsl:value-of select="mods:extent"/>
+				</td>
+			</tr>
+		</xsl:for-each>
 		<xsl:for-each select="mods:part">
 			<tr>
 				<td>
@@ -1000,6 +1010,16 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				</td>
 				<td>
 					<xsl:value-of select="mods:detail/mods:title"/>
+				</td>
+			</tr>
+		</xsl:for-each>
+		<xsl:for-each select="mods:note[@type='content']">
+			<tr>
+				<td>
+					<xsl:text>Content Note</xsl:text>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
 				</td>
 			</tr>
 		</xsl:for-each>
