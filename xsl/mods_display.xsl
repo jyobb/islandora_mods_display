@@ -598,6 +598,16 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</td>
 		</tr>
 	</xsl:if>
+	<xsl:if test="mods:place">
+		<tr>
+			<td>
+				<xsl:text>Place of Publication</xsl:text>
+			</td>
+			<td>
+				<xsl:value-of select="mods:place/mods:placeTerm"/>
+			</td>
+		</tr>
+	</xsl:if>
 </xsl:template>	
 	<!--
 <xsl:template match="mods:originInfo">
@@ -981,7 +991,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				<td>
 					<xsl:choose>
 						<xsl:when test="mods:note/@type='medium'">
-							<xsl:text>Medium</xsl:text>
+							<xsl:text>Original Media</xsl:text>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="mods:note/@type"/>
@@ -996,7 +1006,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		<xsl:for-each select="mods:physicalDescription[mods:extent]">
 			<tr>
 				<td>
-					<xsl:text>Extent</xsl:text>
+					<xsl:text>Host Size</xsl:text>
 				</td>
 				<td>
 					<xsl:value-of select="mods:extent"/>
@@ -1016,7 +1026,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		<xsl:for-each select="mods:note[@type='content']">
 			<tr>
 				<td>
-					<xsl:text>Content Note</xsl:text>
+					<xsl:text>Host Content Note</xsl:text>
 				</td>
 				<td>
 					<xsl:value-of select="."/>
