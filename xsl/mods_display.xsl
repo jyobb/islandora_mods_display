@@ -927,27 +927,31 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	  </dc:identifier>
 	</xsl:template>-->
 
-	<xsl:template match="mods:language">
-		<xsl:if test="mods:languageTerm[@type='code']">
-	  		<tr>
+	<xsl:template match="mods:language[mods:languageTerm/@type='code']">
+			<tr>
 	  			<td>
 	  				<xsl:text>Language Code</xsl:text>
 	  			</td>
 	  			<td>
-	      			<xsl:value-of select="."/>
+	  				<xsl:for-each select="mods:languageTerm[@type='code']">
+		      			<xsl:value-of select="."/>
+		  				<xsl:if test="position()!=last()">, </xsl:if>
+	  				</xsl:for-each>
 				</td>
 	  		</tr>
-		</xsl:if>
-		<xsl:if test="mods:languageTerm[@type='text']">
-			<tr>
-				<td>
-					<xsl:text>Language</xsl:text>
-				</td>
-				<td>
+	</xsl:template>
+	<xsl:template match="mods:language[mods:languageTerm/@type='term']">
+		<tr>
+			<td>
+				<xsl:text>Language</xsl:text>
+			</td>
+			<td>
+				<xsl:for-each select="mods:languageTerm[@type='term']">
 					<xsl:value-of select="."/>
-				</td>
-			</tr>
-		</xsl:if>
+					<xsl:if test="position()!=last()">, </xsl:if>
+				</xsl:for-each>
+			</td>
+		</tr>
 	</xsl:template>
 <!-- <start will's own loop>-->
 	<xsl:template match="mods:identifier[not(@displayLabel='Object File Name')]">
@@ -967,7 +971,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 					<xsl:value-of select="@displayLabel"/>
 				</td>
 				<td>
-					<xsl:value-of select="mods:title | mods:partNumber"/>
+					<xsl:value-of select="mods:title | mods:partNumber | mods:partName"/>
 				</td>
 			</tr>
 		</xsl:for-each>
