@@ -146,7 +146,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 
 			<xsl:value-of select="mods:title"/>
 			<xsl:if test="mods:subTitle">
-				<!-- <xsl:text>: </xsl:text> -->
+				<xsl:text>: </xsl:text>
 				<xsl:value-of select="mods:subTitle"/>
 			</xsl:if>
 			<xsl:if test="mods:partNumber">
