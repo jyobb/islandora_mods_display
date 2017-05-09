@@ -1170,6 +1170,12 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				</td></tr>
 		</xsl:if>
 	</xsl:template>
+	<xsl:template match="mods:identifier[@displayLabel='Object File Name']">
+		<tr>
+			<td>Object File Name</td>
+			<td><xsl:value-of select="."/></td>
+		</tr>
+	</xsl:template>
 
 	<xsl:template name="name">
 	  	<xsl:value-of select="mods:namePart"/>
