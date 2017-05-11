@@ -995,7 +995,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 				<td>
 					<xsl:choose>
 						<xsl:when test="mods:note/@type='medium'">
-							<xsl:text>Original Media</xsl:text>
+							<xsl:text>Medium</xsl:text>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="mods:note/@type"/>
@@ -1010,7 +1010,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		<xsl:for-each select="mods:physicalDescription[mods:extent]">
 			<tr>
 				<td>
-					<xsl:text>Host Size</xsl:text>
+					<xsl:text>Extent</xsl:text>
 				</td>
 				<td>
 					<xsl:value-of select="mods:extent"/>
