@@ -380,7 +380,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 
 	  <xsl:if test="normalize-space(mods:name)">
 	    <xsl:for-each select="mods:name">
-	      <tr><td><xsl:value-of select="$subjectName"/></td><td>
+	      <tr><td class="subjectName"><xsl:value-of select="$subjectName"/></td><td>
 		  <xsl:call-template name="name"/>
 	      </td></tr>
 	    </xsl:for-each>
@@ -434,7 +434,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	<xsl:template match="mods:abstract">
 	  <!-- <xsl:if test="mods:abstract =''"> -->
 	  <xsl:if test="normalize-space()">
-		  <tr><td><xsl:choose><xsl:when test="not(@displayLabel)">
+		  <tr><td class="abstract"><xsl:choose><xsl:when test="not(@displayLabel)">
                                 <xsl:value-of select="$abstract"/>
                         </xsl:when></xsl:choose><xsl:value-of select="@displayLabel"/> </td><td>			
 			<xsl:value-of select="."/>
@@ -510,7 +510,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 <!--
 	<xsl:template match="mods:originInfo">
 	<xsl:for-each select="mods:dateIssued">
-	<tr><td><xsl:value-of select="$dateCreated"/></td><td>aoeuaoeu<xsl:value-of select="."/></td></tr>
+	<tr><td class="dateCreated"><xsl:value-of select="$dateCreated"/></td><td>aoeuaoeu<xsl:value-of select="."/></td></tr>
 	</xsl:for-each>
 	</xsl:template>
 -->
