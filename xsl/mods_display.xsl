@@ -528,7 +528,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	<xsl:if test="mods:dateCreated">
 		<tr>
 			<td><xsl:value-of select="$dateCreated"/></td>
-			<td><xsl:value-of select="mods:dateCreated"/>
+			<td class="dateCreated"><xsl:value-of select="mods:dateCreated"/>
 				<xsl:if test="mods:dateCreated/@qualifier">
 					<xsl:text> (</xsl:text>
 					<xsl:value-of select="mods:dateCreated/@qualifier"/>
