@@ -434,9 +434,9 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	<xsl:template match="mods:abstract">
 	  <!-- <xsl:if test="mods:abstract =''"> -->
 	  <xsl:if test="normalize-space()">
-		  <tr><td class="abstract"><xsl:choose><xsl:when test="not(@displayLabel)">
+		  <tr><td><xsl:choose><xsl:when test="not(@displayLabel)">
                                 <xsl:value-of select="$abstract"/>
-                        </xsl:when></xsl:choose><xsl:value-of select="@displayLabel"/> </td><td>			
+                        </xsl:when></xsl:choose><xsl:value-of select="@displayLabel"/> </td><td class="abstract">			
 			<xsl:value-of select="."/>
 		  </td></tr>
 	  </xsl:if>
