@@ -51,7 +51,6 @@ function islandora_mods_display_preprocess_islandora_mods_display_display(array 
 		  'physicalLocation' => 'Physical Location',
 		  'shelfLocation' => 'Shelf Location',
                   'recommendedCitation' => 'Recommended Citation',
-		 // 'url' => 'URL',
 		  'holdingSubLocation' => 'Holding Sublocation',
 		  'holdingShelfLocator' => 'Holding Shelf Locator',
 		  'electronicLocator' => 'Electronic Locator',

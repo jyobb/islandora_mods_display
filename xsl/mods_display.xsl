@@ -30,7 +30,7 @@ When the first subelement in a subject wrapper is topic, subject subelements are
 Some subject subelements, i.e., geographic, temporal, hierarchicalGeographic, and cartographics, are also parsed into dc:coverage
 The subject subelement geographicCode is dropped in the transform
 
-	
+
 Revision 1.1	2007-05-18 <tmee@loc.gov>
 		Added modsCollection conversion to DC SRU
 		Updated introductory documentation
@@ -41,6 +41,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 
 	<xsl:output method="xml" indent="yes"/>
 	<xsl:strip-space elements="*"/>
+	<xsl:key name="namesByDisplayLabel" match="mods:name" use="@displayLabel"/>
 	<xsl:template match="/">
 	  <xsl:param name="title" />
 	  <xsl:param name="name" />
@@ -70,7 +71,8 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	  <xsl:param name="identifier" />
 	  <xsl:param name="physicalLocation" />
 	  <xsl:param name="shelfLocation" />
-	  <xsl:param name="url" />
+	<!--  <xsl:param name="url" /> -->
+	  <xsl:param name="recommendedCitation" />
 	  <xsl:param name="holdingSubLocation" />
 	  <xsl:param name="holdingShelfLocator" />
 	  <xsl:param name="electronicLocator" />
@@ -102,73 +104,271 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		</xsl:choose>
 	</xsl:template>
 	
-	<xsl:template match="mods:titleInfo">
-		<!-- <dc:title> -->
-		<tr><td><xsl:value-of select="$title"/></td><td>
+	<xsl:template match="mods:titleInfo[normalize-space(.)]">
+	<!-- <dc:title> -->
+			<tr><td>
+			<xsl:choose>
+			  <xsl:when test="not(@displayLabel)">
+			   <xsl:value-of select="$title"/>
+			 </xsl:when></xsl:choose>
+			 <xsl:value-of select="@displayLabel"/>
+			
+			</td><td class="modsTitle">
+
+<!--<xsl:if test="position()!=last()">-->
+
+<!--
+                        <xsl:value-of select="mods:nonSort"/>
+			<xsl:if test="mods:nonSort">
+				<xsl:analyze-string select="." regex="[Ane]$">
+                		<xsl:matching-substring>
+				<xsl:text> </xsl:text>
+				</xsl:matching-substring></xsl:analyze-string> 
+			</xsl:if>
+-->
 			<xsl:value-of select="mods:nonSort"/>
 			<xsl:if test="mods:nonSort">
 				<xsl:text> </xsl:text>
 			</xsl:if>
+
+<!--
+			<xsl:variable name="nonSortRegEx" select="'[Ane]$'"/>
+        		<xsl:value-of select="mods:nonSort"/>
+        		<xsl:if test="mods:nonSort">
+            			<xsl:choose>
+        	 			<xsl:when test="matches(mods:nonSort, $nonSortRegEx)">
+                     				<xsl:text> </xsl:text>
+                			</xsl:when>
+                			<xsl:otherwise/>
+            			</xsl:choose>  
+        		</xsl:if>
+-->
+
 			<xsl:value-of select="mods:title"/>
 			<xsl:if test="mods:subTitle">
-				<xsl:text>: </xsl:text>
+				<xsl:if test="mods:title">: </xsl:if> <!--test for title element within this titleInfo-->
 				<xsl:value-of select="mods:subTitle"/>
 			</xsl:if>
 			<xsl:if test="mods:partNumber">
-				<xsl:text>. </xsl:text>
+				<!--<xsl:text>. </xsl:text> -->
 				<xsl:value-of select="mods:partNumber"/>
 			</xsl:if>
 			<xsl:if test="mods:partName">
-				<xsl:text>. </xsl:text>
+				<!--<xsl:text>. </xsl:text> -->
 				<xsl:value-of select="mods:partName"/>
 			</xsl:if>
 			</td></tr>
  	<!-- </dc:title> -->
 	</xsl:template>
 
-
-	<xsl:template match="mods:name">
+	<xsl:template match="mods:name[1]">
+		<xsl:for-each select="//mods:name[count(. | key('namesByDisplayLabel', @displayLabel)[1]) = 1]">
+		<xsl:variable name="nameType" select="@type"/>
 		<tr>
-		  <td>
-		    <xsl:value-of select="$name"/>
-		  </td><td>
-
-		<xsl:choose>
-			<xsl:when
-				test="mods:role/mods:roleTerm[@type='text']='creator' or mods:role/mods:roleTerm[@type='code']='cre' ">
-					<xsl:call-template name="name"/>
-			</xsl:when>
-
-			<xsl:otherwise>
-					<xsl:call-template name="name"/>
-			</xsl:otherwise>
-		</xsl:choose>
-		  </td>
+			<td>
+				<xsl:choose>
+					<xsl:when test="not(@displayLabel)">
+                    	<xsl:value-of select="$name"/>
+                    </xsl:when></xsl:choose>
+		     <xsl:value-of select="@displayLabel"/>
+			</td>
+			<td class="modsContributor">
+				<xsl:choose>
+					<xsl:when test="not(@displayLabel)">
+						<xsl:for-each select="mods:namePart">
+							<a>
+								<xsl:attribute name="href">
+									<xsl:choose>
+										<xsl:when test="$nameType">
+											<xsl:value-of select="'/islandora/search/mods_name_'"/>
+											<xsl:value-of select="$nameType"/>
+											<xsl:text>_namePart_mt%3A%2522</xsl:text>
+											<xsl:value-of select="."/>
+											<xsl:text>%2522</xsl:text>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="'/islandora/search/mods_name_namePart_mt%3A%2522'"/>
+											<xsl:value-of select="."/>
+											<xsl:value-of select="'%2522'"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:attribute>
+								<xsl:value-of select="."/>
+							</a>
+							<br />
+						</xsl:for-each>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:for-each select="key('namesByDisplayLabel', @displayLabel)">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:choose>
+								<xsl:when test="$nameType">
+									<xsl:value-of select="'/islandora/search/mods_name_'"/>
+									<xsl:value-of select="$nameType"/>
+									<xsl:text>_namePart_mt%3A%2522</xsl:text>
+									<xsl:value-of select="mods:namePart"/>
+									<xsl:text>%2522</xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="'/islandora/search/mods_name_namePart_mt%3A%2522'"/>
+									<xsl:value-of select="mods:namePart"/>
+									<xsl:value-of select="'%2522'"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>
+						<xsl:value-of select="mods:namePart"/>
+					</a>
+					<br />
+				</xsl:for-each>
+			</td>
 		</tr>
+		</xsl:for-each>
 	</xsl:template>
-
+	
 	<xsl:template match="mods:classification">
-		<tr>
-		  <td>
+		<tr><td>
 		    <xsl:value-of select="$classification"/>
-		  </td>
-		  <td>
+		</td><td>
 			<xsl:value-of select="."/>
-		</td>
-		</tr>
+		</td></tr>
 	</xsl:template>
 
-	<xsl:template match="mods:subject[mods:topic | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] ">
+	<xsl:template match="mods:subject[mods:topic][1]">
+		<tr>
+			<td>
+				<xsl:if test="normalize-space(mods:topic)">
+					<xsl:choose>
+						<xsl:when test="not(@displayLabel)">
+							<xsl:text>Subject</xsl:text>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:value-of select="@displayLabel"/>
+				</xsl:if>
+			</td>
+			<td>
+				<a>
+					<xsl:attribute name="href">
+						<xsl:for-each select="mods:topic">
+							<xsl:if test="position()=1">
+								<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A'"/>
+							</xsl:if>
+							<xsl:text>%2522</xsl:text>
+							<xsl:value-of select="."/>
+							<xsl:text>%2522</xsl:text>
+						</xsl:for-each>
+					</xsl:attribute>
+					<xsl:for-each select="mods:topic">
+						<xsl:value-of select="."/>
+						<xsl:if test="position()!=last()">--</xsl:if>
+					</xsl:for-each>
+				</a>
+				<br />
+				<xsl:for-each select="following-sibling::mods:subject[mods:topic]">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:for-each select="mods:topic">
+								<xsl:if test="position()=1">
+								<xsl:value-of select="'/islandora/search/mods_subject_topic_ms%3A'"/>
+								</xsl:if>
+								<xsl:text>%2522</xsl:text>
+								<xsl:value-of select="."/>
+								<xsl:text>%2522</xsl:text>
+							</xsl:for-each>
+						</xsl:attribute>
+						<xsl:for-each select="mods:topic">
+							<xsl:value-of select="."/>
+							<xsl:if test="position()!=last()">--</xsl:if>
+						</xsl:for-each>
+					</a>
+					<br />
+				</xsl:for-each>
+			</td>
+		</tr>
+	</xsl:template>
+	<xsl:template match="mods:subject[mods:geographic][1]">
+		<tr>
+			<td>
+				<xsl:if test="normalize-space(mods:geographic)">
+					<xsl:choose>
+						<xsl:when test="not(@displayLabel)">
+							<xsl:text>Location</xsl:text>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:value-of select="@displayLabel"/>
+				</xsl:if>
+			</td>
+			<td>
+				<xsl:for-each select="mods:geographic">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="'/islandora/search/mods_subject_geographic_ms%3A%2522'"/>
+							<xsl:value-of select="."/>
+							<xsl:value-of select="'%2522'"/>
+						</xsl:attribute>
+						<xsl:value-of select="."/>
+					</a>
+					<br />
+				</xsl:for-each>
+				<xsl:for-each select="following-sibling::mods:subject[mods:geographic]">
+					<xsl:for-each select="mods:geographic">
+						<a>
+							<xsl:attribute name="href">
+								<xsl:value-of select="'/islandora/search/mods_subject_geographic_ms%3A%2522'"/>
+								<xsl:value-of select="."/>
+								<xsl:value-of select="'%2522'"/>
+							</xsl:attribute>
+							<xsl:value-of select="."/>
+						</a>
+					</xsl:for-each>
+					<br />
+				</xsl:for-each>
+			</td>
+		</tr>
+	</xsl:template>
+	<xsl:template match="mods:subject[mods:temporal][1]">
+		<tr>
+			<td>
+				<xsl:if test="normalize-space(mods:temporal)">
+					<xsl:choose>
+						<xsl:when test="not(@displayLabel)">
+							<xsl:text>Time Period</xsl:text>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:value-of select="@displayLabel"/>
+				</xsl:if>
+			</td>
+			<td>
+				<xsl:for-each select="mods:temporal">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="'/islandora/search/mods_subject_temporal_ms%3A%2522'"/>
+							<xsl:value-of select="."/>
+							<xsl:value-of select="'%2522'"/>
+						</xsl:attribute>
+						<xsl:value-of select="."/>
+					</a>
+					<br />
+				</xsl:for-each>
+				<xsl:for-each select="following-sibling::mods:subject[mods:temporal]">
+					<xsl:for-each select="mods:temporal">
+						<a>
+							<xsl:attribute name="href">
+								<xsl:value-of select="'/islandora/search/mods_subject_temporal_ms%3A%2522'"/>
+								<xsl:value-of select="."/>
+								<xsl:value-of select="'%2522'"/>
+							</xsl:attribute>
+							<xsl:value-of select="."/>
+						</a>
+					</xsl:for-each>
+					<br />
+				</xsl:for-each>
+			</td>
+		</tr>
+	</xsl:template>
+	<xsl:template match="mods:subject[mods:occupation | mods:hierarchicalGeographic | mods:cartographics ] ">
 <!-- 	<xsl:template match="mods:subject[mods:topic | mods:name | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] "> -->
-	  <xsl:if test="normalize-space(mods:topic)">
-	    <xsl:for-each select="mods:topic">
-	      <tr><td><xsl:value-of select="$subjectTopic"/></td><td>
-		  <xsl:value-of select="."/>
-		  <xsl:if test="position()!=last()">--</xsl:if>
-	      </td></tr>  
-	    </xsl:for-each>
-	  </xsl:if>			
-
+	
 	  <xsl:if test="normalize-space(mods:occupation)">
 	    <xsl:for-each select="mods:occupation">
 	      <tr><td><xsl:value-of select="$subjectOccupation"/></td><td>
@@ -180,24 +380,24 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 
 	  <xsl:if test="normalize-space(mods:name)">
 	    <xsl:for-each select="mods:name">
-	      <tr><td><xsl:value-of select="$subjectName"/></td><td>
+	      <tr><td class="subjectName"><xsl:value-of select="$subjectName"/></td><td>
 		  <xsl:call-template name="name"/>
-	      </td></tr>
-	    </xsl:for-each>
-	  </xsl:if>
-	
-	  <xsl:if test="normalize-space(mods:geographic)">
-	    <xsl:for-each select="mods:geographic">
-	      <tr><td><xsl:value-of select="$subjectGeographic"/></td><td>
-		  <xsl:value-of select="."/>
 	      </td></tr>
 	    </xsl:for-each>
 	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:hierarchicalGeographic)">
 	  <xsl:for-each select="mods:hierarchicalGeographic">
-		  <tr><td><xsl:value-of select="$subjectHierGeographic"/></td><td>
+		  <tr><td>
+		  	<xsl:if test="normalize-space(mods:continent|mods:country|mods:provence|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area|mods:citySection)">
+		  		<xsl:choose>
+		  			<xsl:when test="not(../@displayLabel)"> <!-- tests for parent's displayLabel -->
+		  				<xsl:value-of select="$subjectHierGeographic"/>
+		  			</xsl:when>
+		  		</xsl:choose>
+		  		<xsl:value-of select="../@displayLabel"/>
+		  	</xsl:if></td><td>
 				<xsl:for-each
-					select="mods:continent|mods:country|mods:provence|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area">
+					select="mods:continent|mods:country|mods:provence|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area|mods:citySection">
 					<xsl:value-of select="."/>
 					<xsl:if test="position()!=last()">--</xsl:if>
 				</xsl:for-each>
@@ -213,7 +413,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:temporal)">
 	    <xsl:if test="mods:temporal">
-	      <tr><td><xsl:value-of select="subjectTemporal"/></td><td>
+	      <tr><td><xsl:value-of select="$subjectTemporal"/></td><td>
 		  <xsl:for-each select="mods:temporal">
 		    <xsl:value-of select="."/>
 		    <xsl:if test="position()!=last()">-</xsl:if>
@@ -234,7 +434,9 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	<xsl:template match="mods:abstract">
 	  <!-- <xsl:if test="mods:abstract =''"> -->
 	  <xsl:if test="normalize-space()">
-		  <tr><td><xsl:value-of select="$abstract"/></td><td>			
+		  <tr><td><xsl:choose><xsl:when test="not(@displayLabel)">
+                                <xsl:value-of select="$abstract"/>
+                        </xsl:when></xsl:choose><xsl:value-of select="@displayLabel"/> </td><td class="abstract">			
 			<xsl:value-of select="."/>
 		  </td></tr>
 	  </xsl:if>
@@ -250,44 +452,217 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	</xsl:template>
 
 	<xsl:template match="mods:note">
-	  <xsl:if test="normalize-space(.)">	
-	  <tr><td><xsl:value-of select="$note"/></td><td>			
-			<xsl:value-of select="."/>
-		  </td></tr>
-</xsl:if>
+		<xsl:variable name="urlchar" select="'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-#:%_+.~?&amp;/='"/>
+		<xsl:variable name="noteUrl" select="substring-before(substring-after(., 'http'), substring(translate(substring-after(., 'http'), $urlchar, ''),1,1))"/>
+		<xsl:if test="normalize-space(.)">
+			<tr><td>
+				<xsl:choose>
+					<xsl:when test="not(@displayLabel)">
+						<xsl:value-of select="$note"/>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:value-of select="@displayLabel"/>
+			</td>
+				<td>
+					<xsl:choose>	
+						<xsl:when test="contains(., 'http')">
+							<xsl:value-of select="substring-before(., 'http')"/>
+							<xsl:element name="a">
+								<xsl:attribute name="href">
+									<xsl:text>http</xsl:text>
+									<xsl:choose>
+										<xsl:when test="$noteUrl = ''">
+											<xsl:value-of select="substring-after(., 'http')"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="$noteUrl"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:attribute>
+								<xsl:text>http</xsl:text>				
+								<xsl:choose>
+									<xsl:when test="$noteUrl = ''">
+										<xsl:value-of select="substring-after(., 'http')"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$noteUrl"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:element>
+							<xsl:choose>
+								<xsl:when test="$noteUrl = ''">
+									<!--do nothing-->
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="substring-after(., $noteUrl)"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="."/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td></tr>
+		</xsl:if>
 	</xsl:template>
 
-
+	<!-- date stuff -->
+<!--
+	<xsl:template match="mods:originInfo">
+	<xsl:for-each select="mods:dateIssued">
+	<tr><td class="dateCreated"><xsl:value-of select="$dateCreated"/></td><td>aoeuaoeu<xsl:value-of select="."/></td></tr>
+	</xsl:for-each>
+	</xsl:template>
+-->
+<xsl:template match="mods:originInfo">
+	<xsl:if test="mods:edition">
+		<tr>
+			<td>
+				<xsl:text>Edition</xsl:text>
+			</td>
+			<td>
+				<xsl:value-of select="mods:edition"/>
+			</td>
+		</tr>
+	</xsl:if>
+	<xsl:if test="mods:dateCreated">
+		<tr>
+			<td><xsl:value-of select="$dateCreated"/></td>
+			<td class="dateCreated"><xsl:value-of select="mods:dateCreated"/>
+				<xsl:if test="mods:dateCreated/@qualifier">
+					<xsl:text> (</xsl:text>
+					<xsl:value-of select="mods:dateCreated/@qualifier"/>
+					<xsl:text>)</xsl:text>
+				</xsl:if>
+				<xsl:if test="mods:dateCreated[@point='end']">
+					<xsl:text> - </xsl:text>
+					<xsl:value-of select="mods:dateCreated[@point='end']"/>
+					<xsl:if test="mods:dateCreated/@qualifier">
+						<xsl:text> (</xsl:text>
+						<xsl:value-of select="mods:dateCreated/@qualifier"/>
+						<xsl:text>)</xsl:text>
+					</xsl:if>
+				</xsl:if>
+			</td>
+		</tr>
+	</xsl:if>
+	<xsl:if test="mods:dateCaptured">
+		<tr>
+			<td><xsl:text>Date Digitized</xsl:text></td>
+			<td><xsl:value-of select="mods:dateCaptured"/>
+				<xsl:if test="mods:dateCaptured/@qualifier">
+					<xsl:text> (</xsl:text>
+					<xsl:value-of select="mods:dateCaptured/@qualifier"/>
+					<xsl:text>)</xsl:text>
+				</xsl:if>
+				<xsl:if test="mods:dateCaptured[@point='end']">
+					<xsl:text> - </xsl:text>
+					<xsl:value-of select="mods:dateCaptured[@point='end']"/>
+					<xsl:if test="mods:dateCaptured/@qualifier">
+						<xsl:text> (</xsl:text>
+						<xsl:value-of select="mods:dateCaptured/@qualifier"/>
+						<xsl:text>)</xsl:text>
+					</xsl:if>
+				</xsl:if>
+			</td>
+		</tr>
+	</xsl:if>
+	<xsl:if test="mods:dateIssued">
+		<tr>
+			<td><xsl:text>Date Published</xsl:text></td>
+			<td><xsl:value-of select="mods:dateIssued"/>
+				<xsl:if test="mods:dateIssued/@qualifier">
+					<xsl:text> (</xsl:text>
+					<xsl:value-of select="mods:dateIssued/@qualifier"/>
+					<xsl:text>)</xsl:text>
+				</xsl:if>
+				<xsl:if test="mods:dateIssued[@point='end']">
+					<xsl:text> - </xsl:text>
+					<xsl:value-of select="mods:dateIssued[@point='end']"/>
+					<xsl:if test="mods:dateIssued/@qualifier">
+						<xsl:text> (</xsl:text>
+						<xsl:value-of select="mods:dateIssued/@qualifier"/>
+						<xsl:text>)</xsl:text>
+					</xsl:if>
+				</xsl:if>
+			</td>
+		</tr>
+	</xsl:if>
+	<xsl:if test="mods:publisher">
+		<tr>
+			<td>
+				<xsl:text>Publisher</xsl:text>
+			</td>
+			<td>
+				<xsl:value-of select="mods:publisher"/>
+			</td>
+		</tr>
+	</xsl:if>
+	<xsl:if test="mods:place">
+		<tr>
+			<td>
+				<xsl:text>Place of Publication</xsl:text>
+			</td>
+			<td>
+				<xsl:value-of select="mods:place/mods:placeTerm"/>
+			</td>
+		</tr>
+	</xsl:if>
+</xsl:template>	
+	<!--
+<xsl:template match="mods:originInfo">
+       <xsl:if test="mods:dateIssued[contains(@point,'start')] and mods:dateIssued[contains(@point,'end')] and not(mods:dateIssued[@qualifier])"><tr><td><xsl:value-of select="$dateIssued"/></td><td><xsl:value-of select="mods:dateIssued[contains(@point,'start')]"/>-<xsl:value-of select="mods:dateIssued[contains(@point,'end')]"/></td></tr></xsl:if>
+       <xsl:if test="mods:dateIssued[contains(@point,'start')] and mods:dateIssued[contains(@point,'end')] and mods:dateIssued[@qualifier]"><tr><td><xsl:value-of select="$dateIssued"/></td><td>Approximately <xsl:value-of select="mods:dateIssued[contains(@point,'start')]"/>-<xsl:value-of select="mods:dateIssued[contains(@point,'end')]"/></td></tr></xsl:if>
+       <xsl:if test="mods:dateIssued[contains(@keydate,'yes')] and not(mods:dateIssued[@point]) and not(mods:dateIssued[@qualifier])"><tr><td><xsl:value-of select="$dateIssued"/></td><td><xsl:value-of select="mods:dateIssued"/></td></tr></xsl:if>
+       <xsl:if test="mods:dateIssued[contains(@keydate,'yes')] and not(mods:dateIssued[@point]) and mods:dateIssued[@qualifier]"><tr><td><xsl:value-of select="$dateIssued"/></td><td>Approximately <xsl:value-of select="mods:dateIssued"/></td></tr></xsl:if>
+       <xsl:if test="mods:dateCreated"><tr><td><xsl:value-of select="$dateCreated"/></td><td><xsl:value-of select="mods:dateCreated"/></td></tr></xsl:if>
+       <xsl:if test="mods:dateCaptured"><tr><td><xsl:value-of select="$dateCaptured"/></td><td><xsl:value-of select="mods:dateCaptured"/></td></tr></xsl:if>
+       <xsl:if test="mods:dateIssued"><tr><td><xsl:value-of select="$dateIssued"/></td><td><xsl:value-of select="mods:dateIssued"/></td></tr></xsl:if>
+   </xsl:template>
+   -->
+<!--
+	<xsl:template match="mods:originInfo">
+		<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr>
+		<xsl:if test="mods:dateIssued"><tr><td><xsl:value-of select="$dateIssued"/></td>
+	<td><xsl:analyze-string select="." regex="([0-9]{8})">
+		<xsl:matching-substring>
+		<xsl:text>"match"</xsl:text></xsl:matching-substring>
+	    </xsl:analyze-string> 
+			<xsl:value-of select="."/></td></tr></xsl:if>
+		
+		<xsl:if test="mods:dateCreated"><tr><td><xsl:value-of select="$dateCreated"/></td>
+	<td>
+		<xsl:value-of select="."/></td></tr></xsl:if>
+		
+		<xsl:if test="mods:dateCaptured"><tr><td><xsl:value-of select="$dateCaptured"/></td>
+	<td>
+		<xsl:value-of select="."/></td></tr></xsl:if>
+	<tr><td><xsl:copy-of select="name(.)"/></td><td><xsl:value-of select="."/></td></tr>
+	</xsl:template>
+-->
+<!--	
 	<xsl:template match="mods:originInfo">
 		<xsl:apply-templates select="*[@point='start']"/>
-
 		<xsl:for-each select="mods:dateIssued[@point!='start' and @point!='end']">
 		  <tr><td><xsl:value-of select="$dateIssued"/></td><td>			
 				<xsl:value-of select="."/>
 				</td></tr>
 		</xsl:for-each>
-
-
 		<xsl:for-each select="mods:dateCreated[@point!='start' and @point!='end']">
 		  <tr><td><xsl:value-of select="$dateCreated"/></td><td>
 				<xsl:value-of select="."/>
 			</td></tr>
 		</xsl:for-each>
-
 		<xsl:for-each select="mods:dateCaptured[@point!='start' and @point!='end']">
 		  <tr><td><xsl:value-of select="$dateCaptured"/></td><td>
 				<xsl:value-of select="."/>
 			</td></tr>
 		</xsl:for-each>
-
 		<xsl:for-each select="mods:dateOther[@point!='start' and @point!='end']">
 		  <tr><td><xsl:value-of select="$dateOther"/></td><td>
 				<xsl:value-of select="."/>
 			</td></tr>
 		</xsl:for-each>
-
-
-
 		<xsl:for-each select="mods:publisher">
 		  <xsl:if test="normalize-space(mods:publisher)">
 		  <tr><td><xsl:value-of select="$publisher"/></td><td>			
@@ -295,7 +670,9 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		  </td></tr>
 		  </xsl:if>
 		</xsl:for-each>
+
 	</xsl:template>
+-->
 <!--
 	<xsl:template match="mods:dateIssued | mods:dateCreated | mods:dateCaptured">
 		<dc:date>
@@ -314,6 +691,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		</dc:date>
 	</xsl:template>
 -->
+
 	<xsl:template match="mods:genre">
 	  <xsl:if test="normalize-space()">
 	  <tr><td><xsl:value-of select="$genre"/></td><td>
@@ -388,7 +766,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 	<xsl:template match="mods:physicalDescription">
 		<xsl:if test="mods:extent">
 		  <xsl:if test="normalize-space(mods:extent)">
-			<tr><td><xsl:value-of select="$extent"/></td><td>
+			<tr><td><xsl:text>Size</xsl:text></td><td>
 				<xsl:value-of select="mods:extent"/>
 			</td></tr>
 		  </xsl:if>
@@ -407,6 +785,16 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
                </td></tr>
 		  </xsl:if>
 	       </xsl:if>
+		<xsl:if test="mods:note[@type='medium']">
+			<tr>
+				<td>
+					<xsl:text>Original Format</xsl:text>
+				</td>
+				<td>
+					<xsl:value-of select="mods:note[@type='medium']"/>
+				</td>
+			</tr>	
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="mods:mimeType">
@@ -417,12 +805,15 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 		  </xsl:if>
 	</xsl:template>
 
-	<xsl:template match="mods:identifier">
-	  <xsl:if test="normalize-space(.)">
-	  <tr><td><xsl:value-of select="$identifier"/></td><td>
-	      <xsl:value-of select="."/>
-	  </td></tr>
-	  </xsl:if>
+<!--	<xsl:template match="mods:identifier">
+	  <tr>
+	  	<td>
+	  		<xsl:value-of select="$identifier"/>
+	  	</td>
+	  	<td>
+	      <xsl:value-of select="."/> Identify yourself
+	  	</td>
+	  </tr>-->
 	  <!--
 		<xsl:variable name="type" select="translate(@type,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
 		<xsl:choose>
@@ -438,110 +829,366 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</xsl:otherwise>
 		</xsl:choose>
 		-->
-	</xsl:template>
+	<!--</xsl:template>-->
 
+<!-- will's template for physloc -->
 	<xsl:template match="mods:location">
-	  <xsl:if test="normalize-space(mods:physicalLocation)">
-	    <tr><td><xsl:value-of select="$physicalLocation"/></td><td>
-		<xsl:for-each select="mods:physicalLocation">
-		  <xsl:value-of select="."/>
-		  <xsl:if test="position()!=last()">--</xsl:if>
+		<xsl:for-each select="mods:physicalLocation[not(@displayLabel='OCLC Member Symbol')]">
+			<tr>
+				<td>
+				<xsl:choose>
+					<xsl:when test="not(@displayLabel)">
+	        	    	<xsl:value-of select="$physicalLocation"/>
+	            	</xsl:when>
+				</xsl:choose>
+	        	<xsl:value-of select="@displayLabel"/>
+	        	</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
 		</xsl:for-each>
-	    </td></tr>
+
+	  <xsl:if test="normalize-space(mods:shelfLocator)">
+	  	<tr>
+	  		<td>
+	  			<xsl:text>Shelf Locator</xsl:text>
+	  		</td>
+	  		<td>
+	      		<xsl:for-each select="mods:shelfLocator">
+					<xsl:value-of select="."/>
+	      		</xsl:for-each>
+	  		</td>
+	  	</tr>
 	  </xsl:if>
-	  <xsl:if test="normalize-space(mods:shelfLocation)">
-	  <tr><td><xsl:value-of select="$shelfLocation"/></td><td>
-	      <xsl:for-each select="mods:shelfLocation">
-		<xsl:value-of select="."/>
-		<xsl:if test="position()!=last()">--</xsl:if>
-	      </xsl:for-each>
-	  </td></tr>
-	  </xsl:if>
-	  <xsl:if test="normalize-space(mods:url)">
+<!--  <xsl:if test="normalize-space(mods:url)">
 	    <tr><td><xsl:value-of select="$url"/></td><td>
 		<xsl:for-each select="mods:url">
 		  <xsl:value-of select="."/>
 		</xsl:for-each>
 	    </td></tr>
+	  </xsl:if> -->
+	  <xsl:if test="normalize-space(mods:recommendedCitation)">
+	  	<tr>
+	  		<td>
+	  			<xsl:value-of select="$recommendedCitation"/>
+	  		</td>
+	  		<td>
+				<xsl:for-each select="mods:recommendedCitation">
+		  			<xsl:value-of select="."/>
+				</xsl:for-each>
+	    	</td>
+	  	</tr>
 	  </xsl:if>
-	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:sublocation)">
-		<tr><td><xsl:value-of select="$holdingSubLocation"/></td><td>
-		  <xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:sublocation">
-		    <xsl:value-of select="."/>
-		    <xsl:if test="position()!=last()">--</xsl:if>
-		  </xsl:for-each>
-		  </td></tr>
+	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:subLocation)">
+		<tr>
+			<td>
+				<xsl:text>Sublocation</xsl:text>
+			</td>
+			<td>
+		  		<xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:subLocation">
+		    		<xsl:value-of select="."/>
+		  		</xsl:for-each>
+		  	</td>
+		</tr>
 	  </xsl:if>
-	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:shelfLocation)">
-		<tr><td><xsl:value-of select="$holdingShelfLocator"/></td><td>
-		  <xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:shelfLocator">
-		    <xsl:value-of select="."/>
-		    <xsl:if test="position()!=last()">--</xsl:if>
-		  </xsl:for-each>
-		  </td></tr>
+	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:shelfLocator)">
+		<tr>
+			<td>
+				<xsl:text>Shelf Locator</xsl:text>
+			</td>
+			<td>
+		  		<xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:shelfLocator">
+		    		<xsl:value-of select="."/>
+		  		</xsl:for-each>
+		  	</td>
+		</tr>
 	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:electronicLocator)">
-		<tr><td><xsl:value-of select="$electronicLocator"/></td><td>
-			<xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:electronicLocator">
-				<xsl:value-of select="."/>
-			</xsl:for-each>
-		</td></tr>
+		<tr>
+			<td>
+				<xsl:value-of select="$electronicLocator"/>
+			</td>
+			<td>
+				<xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:electronicLocator">
+					<xsl:value-of select="."/>
+				</xsl:for-each>
+			</td>
+		</tr>
 	  </xsl:if>
 	</xsl:template>
-<!--
-	<xsl:template match="mods:location/mods:holdingSimple/mods:copyInformation">
+
+<!--	<xsl:template match="mods:location/mods:holdingSimple/mods:copyInformation">
 	  <dc:identifier>
 	    <xsl:for-each select="mods:sublocation | mods:shelfLocator | mods:electronicLocator">
 	      <xsl:value-of select="."/>
 	      <xsl:if test="position()!=last()"></xsl:if>
 	    </xsl:for-each>
 	  </dc:identifier>
-	</xsl:template>
--->
+	</xsl:template>-->
 
-	<xsl:template match="mods:language">
-<xsl:if test="mods:language =''">
-	  <tr><td><xsl:value-of select="$language"/></td><td>
-	      <xsl:value-of select="normalize-space(.)"/>
-	</td></tr>
-</xsl:if>
+	<xsl:template match="mods:language[mods:languageTerm/@type='code']">
+			<tr>
+	  			<td>
+	  				<xsl:text>Language Code</xsl:text>
+	  			</td>
+	  			<td>
+	  				<xsl:for-each select="mods:languageTerm[@type='code']">
+		      			<xsl:value-of select="."/>
+		  				<xsl:if test="position()!=last()">, </xsl:if>
+	  				</xsl:for-each>
+				</td>
+	  		</tr>
 	</xsl:template>
+	<xsl:template match="mods:language[mods:languageTerm/@type='term']">
+		<tr>
+			<td>
+				<xsl:text>Language</xsl:text>
+			</td>
+			<td>
+				<xsl:for-each select="mods:languageTerm[@type='term']">
+					<xsl:value-of select="."/>
+					<xsl:if test="position()!=last()">, </xsl:if>
+				</xsl:for-each>
+			</td>
+		</tr>
+	</xsl:template>
+<!-- <start will's own loop>-->
+	<xsl:template match="mods:identifier[not(@displayLabel='Object File Name')]">
+		<tr>
+			<td>
+				<xsl:value-of select="@displayLabel"/>
+			</td>
+                                 <xsl:if test="contains(., 'http://digital')">
+                                 <tr><td><xsl:text>Link to original item</xsl:text>
+                                 <td>
+                                   <xsl:element name="a">
+                                                <xsl:attribute name="href">
+                                                        <xsl:value-of select="."/>
+                                                </xsl:attribute>
+                                                <xsl:value-of select="."/>
+                                        </xsl:element>
+                                 </td>
 
-	<xsl:template match="mods:relatedItem[mods:titleInfo | mods:identifier | mods:location]">
-<!--	<xsl:template match="mods:relatedItem[mods:titleInfo | mods:name | mods:identifier | mods:location]"> -->
+                                 </td></tr>
+                                 </xsl:if>
+		</tr>
+	</xsl:template>
+	<xsl:template match="mods:relatedItem[mods:titleInfo]">
+		<xsl:for-each select="mods:titleInfo">
+			<tr>
+				<td>
+					<xsl:value-of select="@displayLabel"/>
+				</td>
+				<td>
+					<xsl:value-of select="mods:title | mods:partNumber | mods:partName"/>
+				</td>
+			</tr>
+		</xsl:for-each>
+		<xsl:for-each select="mods:location/mods:url[@displayLabel]">
+			<tr>
+				<td>
+					<xsl:value-of select="@displayLabel"/>
+				</td>
+				<td>
+					<xsl:element name="a">
+						<xsl:attribute name="href">
+							<xsl:value-of select="."/>
+						</xsl:attribute>
+						<xsl:value-of select="."/>
+					</xsl:element>
+				</td>
+			</tr>
+		</xsl:for-each>
+		<xsl:for-each select="mods:physicalDescription[mods:note]">
+			<tr>
+				<td>
+					<xsl:choose>
+						<xsl:when test="mods:note/@type='medium'">
+							<xsl:text>Medium</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="mods:note/@type"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td>
+				<td>
+					<xsl:value-of select="mods:note"/>
+				</td>
+			</tr>
+		</xsl:for-each>
+		<xsl:for-each select="mods:physicalDescription[mods:extent]">
+			<tr>
+				<td>
+					<xsl:text>Extent</xsl:text>
+				</td>
+				<td>
+					<xsl:value-of select="mods:extent"/>
+				</td>
+			</tr>
+		</xsl:for-each>
+		<xsl:for-each select="mods:part">
+			<tr>
+				<td>
+					<xsl:text>Part of</xsl:text>
+				</td>
+				<td>
+					<xsl:value-of select="mods:detail/mods:title"/>
+				</td>
+			</tr>
+		</xsl:for-each>
+		<xsl:for-each select="mods:note[@type='content']">
+			<tr>
+				<td>
+					<xsl:text>Host Content Note</xsl:text>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
+		</xsl:for-each>
+	</xsl:template>
+<!--	<xsl:template match="mods:relatedItem[mods:part]">
+		<xsl:for-each select="mods:part">
+			<tr>
+				<td>
+					<xsl:text>Part of</xsl:text>
+				</td>
+				<td>
+					<xsl:value-of select="mods:detail/mods:title"/>
+				</td>
+			</tr>
+		</xsl:for-each>
+	</xsl:template>
+	<xsl:template match="mods:relatedItem[mods:physicalDescription]">
+		<xsl:for-each select="mods:physicalDescription">
+			<tr>
+				<td>
+					<xsl:choose>
+						<xsl:when test="mods:note/@type='medium'">
+							<xsl:text>Medium</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="mods:note/@type"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					</td>
+				<td>
+					<xsl:value-of select="mods:note"/>
+				</td>
+			</tr>
+		</xsl:for-each>
+	</xsl:template>-->
+	
+	<!--<xsl:template match="mods:relatedItem[mods:titleInfo | mods:identifier | mods:location]">
+<!-\-	<xsl:template match="mods:relatedItem[mods:titleInfo | mods:name | mods:identifier | mods:location]"> -\->
 		<xsl:choose>
 			<xsl:when test="@type='original'">
-			  <tr><td><xsl:value-of select="$relatedItem"/></td><td>
+			  <tr><td><xsl:value-of select="mods:titleInfo/@displayLabel | identifier/@displayLabel  | mods:location/mods:url/@displayLabel"/></td><td>
 					<xsl:for-each
-						select="mods:titleInfo/mods:title | mods:identifier | mods:location/mods:url">
+						select="mods:titleInfo/mods:title | mods:identifier | mods:location/mods:recommendedCitation">
 						<xsl:if test="normalize-space(.)!= ''">
 							<xsl:value-of select="."/>
-							<xsl:if test="position()!=last()">--</xsl:if>
+							<xsl:if test="position()!=last()">-\-</xsl:if>
 						</xsl:if>
 					</xsl:for-each>
 			  </td></tr>
 			</xsl:when>
+			<xsl:when test="mods:titleInfo/@type='alternative'">
+				<tr>
+					<td>
+						<xsl:value-of select="mods:titleInfo[@type='alternative']/@displayLabel | identifier/@displayLabel  | mods:location/mods:url/@displayLabel"/>
+					</td>
+					<td>
+						<xsl:for-each select="mods:titleInfo[@type='alternative']/mods:title | mods:identifier | mods:location/mods:recommendedCitation">
+							<xsl:if test="normalize-space(.)!= ''">
+								<xsl:value-of select="."/> and alternative
+								<xsl:if test="position()!=last()">-\-</xsl:if>
+							</xsl:if>
+						</xsl:for-each>
+					</td>
+				</tr>
+			</xsl:when>
 			<xsl:when test="@type='series'"/>
 			<xsl:otherwise>
-			  <tr><td><xsl:value-of select="$relatedItem"/></td><td>
+			  <tr>
+			  	<td>
+			  		<xsl:value-of select="mods:titleInfo/@displayLabel | mods:identifier/@displayLabel  | mods:location/mods:url/@displayLabel"/>
+			  	</td>
+			  	<td>
 					<xsl:for-each
-						select="mods:titleInfo/mods:title | mods:identifier | mods:location/mods:url">
+						select="mods:titleInfo/mods:title | mods:identifier | mods:location/mods:recommendedCitation">
 						<xsl:if test="normalize-space(.)!= ''">
-							<xsl:value-of select="."/>
-							<xsl:if test="position()!=last()">--</xsl:if>
+							<xsl:value-of select="."/> and otherwise
+							<xsl:if test="position()!=last()">-\-</xsl:if>
 						</xsl:if>
 					</xsl:for-each>
-			  </td></tr>
+			  	</td>
+			  </tr>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+	</xsl:template>-->
 
 	<xsl:template match="mods:accessCondition">
-	  <xsl:if test="normalize-space(.)">
-	    <tr><td><xsl:value-of select="$accessCondition"/></td><td>
-		<xsl:value-of select="."/>
-	    </td></tr>
-	    </xsl:if>
+		<xsl:variable name="urlchar" select="'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-#:%_+.~?&amp;/='"/>
+		<xsl:variable name="accessUrl" select="substring-before(substring-after(., 'http'), substring(translate(substring-after(., 'http'), $urlchar, ''),1,1))"/>
+		<xsl:if test="normalize-space(.)">
+			<tr><td>
+				<xsl:choose>
+					<xsl:when test="not(@displayLabel)">
+						<xsl:value-of select="$accessCondition"/>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:value-of select="@displayLabel"/>
+			</td>
+				<td>
+					<xsl:choose>	
+						<xsl:when test="contains(., 'http')">
+							<xsl:value-of select="substring-before(., 'http')"/>
+							<xsl:element name="a">
+								<xsl:attribute name="href">
+									<xsl:text>http</xsl:text>
+									<xsl:choose>
+										<xsl:when test="$accessUrl = ''">
+											<xsl:value-of select="substring-after(., 'http')"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="$accessUrl"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:attribute>
+								<xsl:text>http</xsl:text>
+								
+								<xsl:choose>
+									<xsl:when test="$accessUrl = ''">
+										<xsl:value-of select="substring-after(., 'http')"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$accessUrl"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:element>
+							<xsl:choose>
+								<xsl:when test="$accessUrl = ''">
+									<!--do nothing-->
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="substring-after(., $accessUrl)"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="."/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td></tr>
+		</xsl:if>
+	</xsl:template>
+	<xsl:template match="mods:identifier[@displayLabel='Object File Name']">
+		<tr>
+			<td>Object File Name</td>
+			<td><xsl:value-of select="."/></td>
+		</tr>
 	</xsl:template>
 
 	<xsl:template name="name">
