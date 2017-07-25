@@ -959,9 +959,19 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			<td>
 				<xsl:value-of select="@displayLabel"/>
 			</td>
-			<td>
-				<xsl:value-of select="."/>
-			</td>
+                                 <xsl:if test="contains(., 'http://digital')">
+                                 <tr><td><xsl:text>Link to original item</xsl:text>
+                                 <td>
+                                   <xsl:element name="a">
+                                                <xsl:attribute name="href">
+                                                        <xsl:value-of select="."/>
+                                                </xsl:attribute>
+                                                <xsl:value-of select="."/>
+                                        </xsl:element>
+                                 </td>
+
+                                 </td></tr>
+                                 </xsl:if>
 		</tr>
 	</xsl:template>
 	<xsl:template match="mods:relatedItem[mods:titleInfo]">
