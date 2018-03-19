@@ -410,6 +410,7 @@
     </xsl:if>
     -->
 
+    <!-- MAM removed 19-March-2018   Causing problems when unexpected hierGeographic and Geographic subject tags are used
     <xsl:if test="*[1][local-name()='topic'] and *[local-name()!='topic']">
       <tr>
         <td class="mods-metadata-label">
@@ -426,12 +427,11 @@
           <xsl:for-each
               select="*[local-name()!='cartographics' and local-name()!='geographicCode' and local-name()!='hierarchicalGeographic'] ">
             <xsl:value-of select="."/>
-            <!-- MAM removed 06-July-2016
-            <xsl:if test="position()!=last()">-</xsl:if>  -->
           </xsl:for-each>
         </td>
       </tr>
-    </xsl:if>
+    </xsl:if>  -->
+
   </xsl:template>
 
 
