@@ -68,6 +68,7 @@
   <xsl:variable name="dateCreated">Index Date</xsl:variable>         <!-- MAM replaced 'Date Created' on 06-Sept-2016 -->
   <xsl:variable name="dateCaptured">Date Captured</xsl:variable>
   <xsl:variable name="dateOther">Date (Other)</xsl:variable>
+  <xsl:variable name="copyrightDate">Copyright Date</xsl:variable>
   <xsl:variable name="publisher">Publisher</xsl:variable>
   <xsl:variable name="genre">Genre</xsl:variable>
   <xsl:variable name="typeOfResource">Type of Resource</xsl:variable>
@@ -758,6 +759,23 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of select="$dateCaptured"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </td>
+        <td>
+          <xsl:value-of select="."/>
+        </td>
+      </tr>
+    </xsl:for-each>
+    <xsl:for-each select="mods:copyrightDate[not(@point)]">
+      <tr>
+        <td class="mods-metadata-label">
+          <xsl:choose>
+            <xsl:when test="@displayLabel">
+              <xsl:value-of select="@displayLabel"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$copyrightDate"/>
             </xsl:otherwise>
           </xsl:choose>
         </td>
