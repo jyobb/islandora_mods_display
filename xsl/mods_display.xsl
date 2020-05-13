@@ -1145,20 +1145,17 @@
           </xsl:choose>
         </td>
         <td>
-          <xsl:for-each select="mods:titleInfo/mods:title|mods:identifier|mods:location|mods:note">
-            <xsl:when test="@xlink:href">
-              <xsl:element name="a">
-                <xsl:attribute name="href">
-                  <xsl:value-of select="@xlink:href"/>
-                </xsl:attribute>
-                <xsl:value-of select="."/>
-              </xsl:element>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="."/>
-            </xsl:otherwise>
-            <xsl:if test="position()!=last()"> -- </xsl:if>
-          </xsl:for-each>
+          <xsl:when test="@xlink:href">
+            <xsl:element name="a">
+              <xsl:attribute name="href">
+                <xsl:value-of select="@xlink:href"/>
+              </xsl:attribute>
+              <xsl:value-of select="mods:titleInfo/mods:title"/>
+            </xsl:element>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="."/>
+          </xsl:otherwise>
         </td>
       </tr>
     </xsl:choose>
