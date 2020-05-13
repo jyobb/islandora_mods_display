@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="mods xsi"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:https="http://www.w3.org/1999/xhtml">
 
   <!--
     This stylesheet modified by M. McFate, Grinnell College, from 24-Feb-2015 to ?????????? for use
@@ -1157,7 +1158,7 @@
             <xsl:otherwise>
               <xsl:value-of select="."/>
             </xsl:otherwise>
-          </xsl:choose>  
+          </xsl:choose>
         </td>
       </tr>
     </xsl:choose>
