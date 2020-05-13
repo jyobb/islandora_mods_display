@@ -1135,29 +1135,15 @@
     <xsl:choose>
       <tr>
         <td class="mods-metadata-label">
-          <xsl:choose>
-            <xsl:when test="@displayLabel">
-              <xsl:value-of select="@displayLabel"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="$relatedItem"/>
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:value-of select="$relatedItem"/>
         </td>
         <td>
-          <xsl:choose>
-            <xsl:when test="@xlink:href">
-              <xsl:element name="a">
-                <xsl:attribute name="href">
-                  <xsl:value-of select="@xlink:href"/>
-                </xsl:attribute>
-                <xsl:value-of select="mods:titleInfo/mods:title"/>
-              </xsl:element>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="mods:titleInfo/mods:title"/>
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:element name="a">
+            <xsl:attribute name="href">
+              <xsl:value-of select="@xlink:href"/>
+            </xsl:attribute>
+            <xsl:value-of select="mods:titleInfo/mods:title"/>
+          </xsl:element>
         </td>
       </tr>
     </xsl:choose>
