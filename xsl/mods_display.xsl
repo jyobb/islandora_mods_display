@@ -1126,7 +1126,6 @@
                  </xsl:when> -->
           </xsl:choose>
         </xsl:for-each>
-
       </td>
     </tr>
   </xsl:template>
@@ -1156,7 +1155,7 @@
               </xsl:element>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:value-of select="."/>
+              <xsl:value-of select="mods:titleInfo/mods:title"/>
             </xsl:otherwise>
           </xsl:choose>
         </td>
