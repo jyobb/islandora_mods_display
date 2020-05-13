@@ -1132,21 +1132,19 @@
 
   <!-- Related Item with xlink:href attribute -->
   <xsl:template match="mods:relatedItem[@xlink:href]">
-    <xsl:choose>
-      <tr>
-        <td class="mods-metadata-label">
-          <xsl:value-of select="$relatedItem"/>
-        </td>
-        <td>
-          <xsl:element name="a">
-            <xsl:attribute name="href">
-              <xsl:value-of select="@xlink:href"/>
-            </xsl:attribute>
-            <xsl:value-of select="mods:titleInfo/mods:title"/>
-          </xsl:element>
-        </td>
-      </tr>
-    </xsl:choose>
+    <tr>
+      <td class="mods-metadata-label">
+        <xsl:value-of select="$relatedItem"/>
+      </td>
+      <td>
+        <xsl:element name="a">
+          <xsl:attribute name="href">
+            <xsl:value-of select="@xlink:href"/>
+          </xsl:attribute>
+          <xsl:value-of select="mods:titleInfo/mods:title"/>
+        </xsl:element>
+      </td>
+    </tr>
   </xsl:template>
 
   <!-- Related Item without any xlink:href attribute... suppress display of @type="constituent"! -->
