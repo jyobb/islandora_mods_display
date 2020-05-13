@@ -15,7 +15,7 @@
      since normalize-space( ) returns a string and not a boolean.
 
     Adding @displayLabel logic like the following on 24-Nov-2015...
-    
+
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
@@ -1130,8 +1130,41 @@
     </tr>
   </xsl:template>
 
-  <!-- Related Item ... suppress display of @type="constituent"! -->
-  <xsl:template match="mods:relatedItem[not(@type='constituent')]">
+  <!-- Related Item with xlink:href attribute -->
+  <xsl:template match="mods:relatedItem[@xlink:href]">
+    <xsl:choose>
+      <tr>
+        <td class="mods-metadata-label">
+          <xsl:choose>
+            <xsl:when test="@displayLabel">
+              <xsl:value-of select="@displayLabel"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$relatedItem"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </td>
+        <td>
+          <xsl:for-each select="mods:titleInfo/mods:title|mods:identifier|mods:location|mods:note">
+            <xsl:when test="@xlink:href">
+              <xsl:element name="a">
+                  <xsl:attribute name="href">
+                      <xsl:value-of select="@xlink:href"/>
+                  </xsl:attribute>
+                  <xsl:value-of select="."/>
+              </xsl:element>
+            <xsl:otherwise>
+              <xsl:value-of select="."/>
+            </xsl:otherwise>
+            <xsl:if test="position()!=last()"> -- </xsl:if>
+          </xsl:for-each>
+        </td>
+      </tr>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- Related Item without any xlink:href attribute... suppress display of @type="constituent"! -->
+  <xsl:template match="mods:relatedItem[not(@type='constituent') and not(@xlink:href)]">
     <xsl:choose>
       <!-- MM adding this to inhibit display of 'admin' (private) notes. 24-Feb-2015 -->
       <xsl:when test="@type='admin'"/>
