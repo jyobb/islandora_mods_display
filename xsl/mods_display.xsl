@@ -1145,17 +1145,19 @@
           </xsl:choose>
         </td>
         <td>
-          <xsl:when test="@xlink:href">
-            <xsl:element name="a">
-              <xsl:attribute name="href">
-                <xsl:value-of select="@xlink:href"/>
-              </xsl:attribute>
-              <xsl:value-of select="mods:titleInfo/mods:title"/>
-            </xsl:element>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="."/>
-          </xsl:otherwise>
+          <xsl:choose>
+            <xsl:when test="@xlink:href">
+              <xsl:element name="a">
+                <xsl:attribute name="href">
+                  <xsl:value-of select="@xlink:href"/>
+                </xsl:attribute>
+                <xsl:value-of select="mods:titleInfo/mods:title"/>
+              </xsl:element>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="."/>
+            </xsl:otherwise>
+          </xsl:choose>  
         </td>
       </tr>
     </xsl:choose>
