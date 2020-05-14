@@ -1184,7 +1184,8 @@
           </xsl:attribute>
           <xsl:value-of select="mods:titleInfo/mods:title"/>
         </xsl:element>
-        <xsl:text> (</xsl:text><xsl:value-of select="@type"/><xsl:text>)</xsl:text>
+        <!-- Removing display of (@type) attribute after the link  14-May-2020...
+        <xsl:text> (</xsl:text><xsl:value-of select="@type"/><xsl:text>)</xsl:text> -->
       </td>
     </tr>
   </xsl:template>
