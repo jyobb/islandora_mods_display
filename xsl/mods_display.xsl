@@ -5,7 +5,7 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <!--
-    This stylesheet modified by M. McFate, Grinnell College, from 24-Feb-2015 to ?????????? for use
+    This stylesheet modified by M. McFate, Grinnell College, from 24-Feb-2015 to May 2020 for use
     in https://digital.grinnell.edu.  Original forked from git://github.com/jyobb/islandora_mods_display.git
     file mods_display.xsl on 24-Feb-2015.
 
@@ -918,8 +918,32 @@
 
   </xsl:template>    <!-- End of originInfo template -->
 
-  <!-- Genre -->
-  <xsl:template match="mods:genre">
+  <!-- Genre with @authorityURI -->
+  <xsl:template match="mods:genre[@authorityURI]">
+    <tr>
+      <td class="mods-metadata-label">
+        <xsl:choose>
+          <xsl:when test="@displayLabel">
+            <xsl:value-of select="@displayLabel"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$genre"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </td>
+      <td>
+        <xsl:element name="a">
+          <xsl:attribute name="href">
+            <xsl:value-of select="@authorityURI"/>
+          </xsl:attribute>
+          <xsl:value-of select="normalize-space(.)"/>
+        </xsl:element>
+      </td>
+    </tr>
+  </xsl:template>
+
+  <!-- Genre without @authorityURI -->
+  <xsl:template match="mods:genre[not(@authorityURI)]">
     <tr>
       <td class="mods-metadata-label">
         <xsl:choose>
