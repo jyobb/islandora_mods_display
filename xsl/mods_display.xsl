@@ -980,9 +980,26 @@
     </tr>
   </xsl:template>
 
-  <!-- Physical description... extent, form, internetMediaType, digitalOrigin or note -->
+  <!-- Physical description form with @authorityURI -->
+  <xsl:template match="mods:physicalDescription/mods:form[@authorityURI]">
+    <tr>
+      <td class="mods-metadata-label">
+        <xsl:value-of select="$form"/>
+      </td>
+      <td>
+        <xsl:element name="a">
+          <xsl:attribute name="href">
+            <xsl:value-of select="@authorityURI"/>
+          </xsl:attribute>
+          <xsl:value-of select="normalize-space(.)"/>
+        </xsl:element>
+      </td>
+    </tr>
+  </xsl:template>
+
+  <!-- Physical description... extent, form w/o @authorityURI, internetMediaType, digitalOrigin or note -->
   <xsl:template
-      match="mods:physicalDescription[mods:extent|mods:form|mods:internetMediaType|mods:digitalOrigin|mods:note]">
+      match="mods:physicalDescription[mods:extent|mods:form[not(@authorityURI)]|mods:internetMediaType|mods:digitalOrigin|mods:note]">
     <xsl:for-each select="./*">
       <tr>
         <td class="mods-metadata-label">
@@ -1154,8 +1171,8 @@
     </tr>
   </xsl:template>
 
-  <!-- Related Item with xlink:href attribute -->
-  <xsl:template match="mods:relatedItem[@xlink:href]">
+  <!-- Related Item with type and xlink:href attributes -->
+  <xsl:template match="mods:relatedItem[@xlink:href and @type]">
     <tr>
       <td class="mods-metadata-label">
         <xsl:value-of select="$relatedItem"/>
@@ -1167,6 +1184,7 @@
           </xsl:attribute>
           <xsl:value-of select="mods:titleInfo/mods:title"/>
         </xsl:element>
+        <xsl:text> (</xsl:text><xsl:value-of select="@type"/><xsl:text>)</xsl:text>
       </td>
     </tr>
   </xsl:template>
